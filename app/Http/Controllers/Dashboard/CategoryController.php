@@ -19,36 +19,81 @@ class CategoryController extends Controller
     }
 
 
+    // public function store(Request $request)
+    // {
+
+    //     $validator = Validator::make($request->all(), [
+    //         'name' => 'required|unique:categories,name',
+    //         'image_image'=>'nullable',
+    //         'status' => 'required',
+
+    //     ]);
+    //     if ($validator->passes()) {
+    //         //code here to store data in database
+
+    //         $category = new Category();
+    //         $category->name = $request->name;
+    //         $category->status = $request->status;
+
+    //         //change image directory
+
+
+    //         $tempDir = public_path('uploads/temp/' . $request->input('category_image'));
+    //         $categoryDir = public_path('uploads/category/' . $request->input('category_image'));
+    //         if (File::exists($tempDir)) {
+    //             File::copy($tempDir, $categoryDir);
+    //             File::delete($tempDir);
+    //         }
+
+    //         $category->image = $request->input('category_image');
+
+
+
+    //         $category->save();
+
+
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Category created successfully',
+    //             'data' => $request->all()
+    //         ]);
+    //     } else {
+    //         return response()->json([
+    //             'status' => 500,
+    //             'message' => 'Something went wrong',
+    //             'errors' => $validator->errors(),
+    //         ]);
+    //     }
+    // }
+
+
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:categories,name',
-
+            'category_image' => 'nullable',
+            'status' => 'required',
         ]);
-        if ($validator->passes()) {
-            //code here to store data in database
 
+        if ($validator->passes()) {
             $category = new Category();
             $category->name = $request->name;
             $category->status = $request->status;
 
-            //change image directory
+            $categoryImage = $request->input('category_image');
+            if ($categoryImage && File::exists(public_path('uploads/temp/' . $categoryImage)) && is_file(public_path('uploads/temp/' . $categoryImage))) {
+                $tempDir = public_path('uploads/temp/' . $categoryImage);
+                $categoryDir = public_path('uploads/category/' . $categoryImage);
 
-
-            $tempDir = public_path('uploads/temp/' . $request->input('category_image'));
-            $categoryDir = public_path('uploads/category/' . $request->input('category_image'));
-            if (File::exists($tempDir)) {
                 File::copy($tempDir, $categoryDir);
                 File::delete($tempDir);
+
+                $category->image = $categoryImage;
+            } else {
+                $category->image = null;
             }
 
-            $category->image = $request->input('category_image');
-
-
-
             $category->save();
-
 
             return response()->json([
                 'status' => 200,
@@ -64,12 +109,24 @@ class CategoryController extends Controller
         }
     }
 
-
-    public function list()
+    public function list(Request $request)
     {
-        $categories =  Category::orderBy('id', 'DESC')->get();
+        $limit = 5;
+        $page = $request->page;
+        $offset = ($page - 1) * $limit;
+        $categories =  Category::orderBy('id', 'DESC')->with('brands')->limit($limit)->offset($offset)->get();
+
+        $TotalRecord = Category::count();
+        $totalPage = ceil($TotalRecord / 5);
+
+
         return response()->json([
             'status' => 200,
+            'pages' => [
+                'totalRecord' => $TotalRecord,
+                'totalPage' => $totalPage,
+                'currentPage' => $page
+            ],
             'categories' => $categories,
         ]);
     }
@@ -119,8 +176,8 @@ class CategoryController extends Controller
                     'status' => 200,
                     'message' => 'Image uploaded successfully',
                     'image' => $imageName,
-                    'category'=>$category
-                    
+                    'category' => $category
+
                 ]);
             }
         } else {
@@ -164,71 +221,67 @@ class CategoryController extends Controller
 
 
 
-public function update(Request $request)
-{
-    $category = Category::find($request->category_id);
-    if ($category == null) {
-        return response()->json([
-            'status' => 400,
-            'message' => "Category not found: " . $request->category_id,
-        ]);
-    }
-
-    // Validate input
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|unique:categories,name,' . $request->category_id,
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => 422,
-            'message' => 'Validation failed',
-            'errors' => $validator->errors(),
-        ]);
-    }
-
-    // Update basic fields
-    $category->name = $request->name;
-    $category->status = $request->status;
-
-    // Default image value (in case no change)
-    $image = $category->image;
-
-    // If new image uploaded (from temp folder)
-    if (!empty($request->input('category_image'))) {
-        $tempDir = public_path('uploads/temp/' . $request->input('category_image'));
-        $categoryDir = public_path('uploads/category/' . $request->input('category_image'));
-
-        if (File::exists($tempDir)) {
-            File::copy($tempDir, $categoryDir);
-            File::delete($tempDir);
+    public function update(Request $request)
+    {
+        $category = Category::find($request->category_id);
+        if ($category == null) {
+            return response()->json([
+                'status' => 400,
+                'message' => "Category not found: " . $request->category_id,
+            ]);
         }
 
-        // Delete old category image
-        if (!empty($category->image)) {
-            $oldPath = public_path('uploads/category/' . $category->image);
-            if (File::exists($oldPath)) {
-                File::delete($oldPath);
+        // Validate input
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:categories,name,' . $request->category_id,
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ]);
+        }
+
+        // Update basic fields
+        $category->name = $request->name;
+        $category->status = $request->status;
+
+        // Default image value (in case no change)
+        $image = $category->image;
+
+        // If new image uploaded (from temp folder)
+        if (!empty($request->input('category_image'))) {
+            $tempDir = public_path('uploads/temp/' . $request->input('category_image'));
+            $categoryDir = public_path('uploads/category/' . $request->input('category_image'));
+
+            if (File::exists($tempDir)) {
+                File::copy($tempDir, $categoryDir);
+                File::delete($tempDir);
             }
+
+            // Delete old category image
+            if (!empty($category->image)) {
+                $oldPath = public_path('uploads/category/' . $category->image);
+                if (File::exists($oldPath)) {
+                    File::delete($oldPath);
+                }
+            }
+
+            $image = $request->input('category_image');
         }
 
-        $image = $request->input('category_image');
+        // Update image field
+        $category->image = $image;
+
+        // Save changes
+        $category->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Category updated successfully',
+            'data' => $category
+        ]);
     }
-
-    // Update image field
-    $category->image = $image;
-
-    // Save changes
-    $category->save();
-
-    return response()->json([
-        'status' => 200,
-        'message' => 'Category updated successfully',
-        'data' => $category
-    ]);
-}
-
-    
-
-
 }

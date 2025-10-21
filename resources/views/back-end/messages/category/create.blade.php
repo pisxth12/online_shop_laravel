@@ -1,5 +1,5 @@
 <div class="modal fade" id="modalCreateCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="max-width:40%;">
+  <div class="modal-dialog mx-auto d-flex" style="max-width:40%; min-width: 300px;">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Creating Category</h1>
@@ -12,7 +12,7 @@
 
           <!-- Category Name -->
           <div class="form-group mb-3">
-            
+
             <label for="">Category Name</label>
             <input type="text" name="name" class="name form-control" placeholder="Enter category name">
             <p></p>

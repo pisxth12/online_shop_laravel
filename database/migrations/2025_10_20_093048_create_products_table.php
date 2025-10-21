@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->foreignId('category_id')->references('id')->on('categories')->cascadeOnDelete();
+            $table->text('desc');
+            $table->float('price');
+            $table->integer('qty');
+            $table->foreignId('brand_id')->references('id')->on('brands')->cascadeOnDelete();    
+            $table->string('color');
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->enum('status',[1,0])->default(1);
             $table->timestamps();
         });
@@ -25,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('products');
     }
 };

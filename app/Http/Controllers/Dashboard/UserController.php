@@ -14,7 +14,7 @@ class UserController extends Controller
         return view('back-end.user');
     }
      public function list(){
-        $users = User::orderBy('id','desc')->get();
+        $users = User::orderBy('id','asc')->get();
         return response()->json([
             'status'=>200,
             'users'=>$users 
