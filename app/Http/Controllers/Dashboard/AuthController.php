@@ -24,6 +24,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        Session::flush();
         return redirect()->route('auth.login');
     }
     public function authenticate(Request $request)
@@ -34,7 +35,8 @@ class AuthController extends Controller
         ]);
         if ($validator->passes()) {
             $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials)) {
+            $remember = $request->has('remember');
+            if (Auth::attempt($credentials , $remember)) {
                 if(Auth::user()->role == 1){
                     return redirect()->route('dashboard.index')->with('success','Wellcome Mr admin 😘');
                 }else{

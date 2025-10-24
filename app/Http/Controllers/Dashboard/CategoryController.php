@@ -139,13 +139,14 @@ class CategoryController extends Controller
     public function delete(Request $request)
     {
         $category = Category::find($request->id);
+
         if ($category->image) {
             $imagePath = public_path("uploads/category/$category->image");
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
             }
             $category->delete();
-
+            
             return response()->json([
                 'status' => 200,
                 'message' => 'Category deleted successfully',

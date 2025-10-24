@@ -4,35 +4,49 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
-
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Star Admin Premium Bootstrap Admin Dashboard Template</title>
-  <!-- plugins:css -->
+
+  <!-- Bootstrap CSS v5.2.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
+
+  <!-- Vendor CSS -->
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/ionicons/dist/css/ionicons.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/css/vendor.bundle.base.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/css/vendor.bundle.addons.css') }}">
 
-  <link rel="stylesheet" href="{{ asset('back-end/assets/css/shared/style.css') }}">
+  <!-- Select2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ asset('back-end/assets/css/shared/style.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/css/demo_1/style.css') }}">
-  <!-- End Layout styles -->
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <!-- Favicon -->
   <link rel="shortcut icon" href="{{ asset('back-end/assets/images/favicon.ico') }}" />
 
-  {{-- jquery link cdn --}}
+  <!-- jQuery (only one version!) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-  {{-- toastify message --}}
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <!-- Bootstrap JS Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Select2 JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+  <!-- Toastify JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
+
 
 <body>
   <div class="container-scroller">
@@ -116,6 +130,9 @@
 
   <!-- container-scroller -->
 
+  {{-- select2 script --}}
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> 
+
   <!-- plugins:js -->
   <script src="{{ asset('back-end/assets/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ asset('back-end/assets/vendors/js/vendor.bundle.addons.js') }}"></script>
@@ -141,14 +158,18 @@
   {{-- toastify mesaage --}}
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+  {{-- select 2 --}}
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> 
+  
+
   <script>
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-    });
+  });
 
-    const Message = (message) => {
+    const Message = (message , status = true) => {
       Toastify({
         text: `${message}`,
         duration: 3000,
@@ -159,11 +180,12 @@
         position: "right", // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)",
+          background: `${status ? 'linear-gradient(to right, #00b09b, #96c93d)':'red' }`
         },
         onClick: function () { } // Callback after click
       }).showToast();
     }
+    
 
   </script>
   @yield('scripts')

@@ -6,36 +6,40 @@
           <h1 class="modal-title fs-5" id="exampleModalLabel">Creatting Product</h1> 
         </div> 
         <div class="modal-body"> 
-            <form  class="formCreateUser" method="POST" enctype="multipart/form-data"> 
+            <form  class="formCreateProduct" method="POST" enctype="multipart/form-data"> 
                 @csrf
                 <div class="row"> 
  
                     <div class="col-lg-8"> 
- 
+
                         <div class="form-group"> 
                             <label for="title">Product Name</label> 
-                            <input type="text" class="title form-control" name="title" required> 
+                            <input type="text" class="title_add form-control" name="title" > 
+                            <p class="pp">d</p>
                         </div> 
  
                         <div class="form-group"> 
                             <label for="name">Description</label> 
-                            <textarea name="desc" id="desc" class="desc form-control" rows="10"></textarea> 
+                            <textarea name="desc" id="desc" class="desc_add form-control " rows="10"></textarea> 
                         </div> 
  
                         <div class="form-group"> 
                             <label for="price">Product Price</label> 
-                            <input type="text" class="price form-control" name="price" required> 
+                            <input type="number" class="price_add form-control" name="price" > 
+                            <p></p>
                         </div> 
  
                         <div class="form-group"> 
                             <label for="qty">Product Quantity</label> 
-                            <input type="text" class="qty form-control"  name="qty" required> 
+                            <input type="number" class="qty_add form-control"  name="qty" > 
+                            <p></p>
                         </div> 
  
                         <div class="form-group"> 
                             <label for="">Product Image</label> 
-                            <input type="file" id="image" class="image form-control" multiple name="image[]" required> 
-                            <button type="button" onclick="productUpload('.formCreateUser')" class=" btn btn-primary upload_images">Uploads</button> 
+                            <input type="file" id="image" class="image_add form-control" multiple name="image[]" required> 
+                            <p></p>
+                            <button type="button" onclick="productUpload('.formCreateProduct')" class=" btn btn-primary upload_images">Uploads</button> 
                         </div>
                         
                         <div class="show-images row">
@@ -47,7 +51,9 @@
                     <div class="col-lg-4"> 
                         <div class="form-group"> 
                             <label for="">Category</label> 
-                            <select name="category"  class="category form-control"> 
+                            <select name="category"  class="category_add form-control"> 
+                                <option value="">Select category</option>
+                                <option value=""></option>
                             </select> 
                         </div> 
                      
@@ -55,15 +61,15 @@
                     <div class="form-group"> 
                         <label for="">Brand</label> 
                        
-                        <select name="brand" id="brand" class="brand form-control"> 
+                        <select name="brand" id="brand" class="brand_add form-control"> 
                             
                         </select> 
                     </div> 
  
                     <div class="form-group"> 
                         <label for="">Color</label> 
-                        <select name="color[]" id="color" style="width : 100%" class="color form-control" multiple ="multiple"> 
-                      
+                        <select name="color[]" id="color_add" style="width : 100%" class="color_add form-control" multiple ="multiple"> 
+                
                         </select> 
                     </div> 
  
@@ -92,7 +98,7 @@
         </div> 
         <div class="modal-footer"> 
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
-          <button onclick="StoreProduct('.formCreateUser')" type="button" class="btn btn-primary">Save</button> 
+          <button onclick="StoreProduct('.formCreateProduct')" type="button" class="btn btn-primary">Save</button> 
         </div> 
       </div> 
     </div> 

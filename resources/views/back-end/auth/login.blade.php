@@ -39,7 +39,7 @@
                                 <div class="form-group">
                                     <label class="label">Email</label>
 
-                                    <input type="email" name="email"
+                                    <input type="email" name="email" value="{{ old('email') }}"
                                         class="form-control @error('email') is-invalid border-danger @enderror"
                                         placeholder="Email...">
 
@@ -55,7 +55,6 @@
                                         class="form-control @error('password') is-invalid border-danger @enderror"
                                         placeholder="*********">
 
-
                                     @error('password')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
@@ -67,7 +66,7 @@
                                 <div class="form-group d-flex justify-content-between">
                                     <div class="form-check form-check-flat mt-0">
                                         <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" checked> Keep me signed in
+                                            <input type="checkbox" name="remeber" {{ old('remember') ? 'checked' : '' }} class="form-check-input" checked> Keep me signed in
                                         </label>
                                     </div>
                                     <a href="#" class="text-small forgot-password text-black">Forgot Password</a>
