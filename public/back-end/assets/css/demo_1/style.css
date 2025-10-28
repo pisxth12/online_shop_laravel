@@ -834,5 +834,19 @@
 }
 .bi-arrow-clockwise{
   color: black;
+   color: rgba(0, 119, 255, 0.731);
  
 }
+.bi-arrow-clockwise{
+  width: fit-content;
+}
+.refresh-page div{
+  font-size: 50px;
+  transition: all 100ms ease-in-out;
+ 
+}
+.refresh-page div:active{
+  color: greenyellow !important;
+  transform: rotate(45deg);
+
+  }

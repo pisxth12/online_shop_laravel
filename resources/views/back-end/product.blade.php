@@ -71,10 +71,16 @@
               {{-- rows will be injected here --}}
             </tbody>
           </table>
+        
         </div>
-
-        <div class="d-flex mt-3">
+        <div class="d-flex mt-3 align-items-center justify-content-between">
           <div class="show_page"></div>
+
+            <div id="prouductRefresh" class="refresh-page d-flex justify-content-end  hover-open " style="cursor: pointer;  ">
+              <div class=" d-flex justify-content-end w-full">
+                <i class="bi bi-arrow-clockwise text-2xl  w-full" style="font-size: 30px"></i>
+              </div>
+          </div>
         </div>
       </div>
     </div>
@@ -82,6 +88,11 @@
 @endsection
 @section('scripts')
   <script>
+
+    // /prodcuct refresh
+    $(document).on('click','#prouductRefresh', function(){
+      productList();
+    })
 
 
     $(document).ready(function () {
@@ -102,40 +113,53 @@
 
 
 
+
     //clear form upldate
    $(document).ready(function(){
     $('#modalEditProduct').on('hidden.bs.modal', function(){
       $(this).find('form')[0].reset();
       $('show-message').html('');
       $('.show-images_edit').html('')
+      $('.show-images_edit_old').html('')
     });
    })
 
 
+   //searchh event
+   $(document).on('click', '.btnSearch', function () {
+      let container = $(this).closest('.modal, .search-form');
+      let searchValue = container.find('.search_box').val();
+      productList(1, searchValue);
+      if (container.hasClass('modal')) {
+        container.hide();
+        $('.modal-backdrop').remove();
+      }
+    });
 
 
-   
 
 
 
 
-
-
-
-
-
-    const productList = () => {
+    const productList = (page=1, search="") => {
       $.ajax({
         type: "get",
         url: "{{ route('product.list') }}",
+        data:{
+          page:page,
+          search:search,
+        },
         dataType: "json",
         success: function (response) {
 
           if (response.status == 200) {
 
-            let products = response.products;
-            let html = ``;
+            let products = response.products || [];
+            
+          let html = ``;
 
+             products = Object.values(products);
+          
             $.each(products, function (key, value) {
               let imageSrc = value.image.length > 0 ? `/uploads/product/${value.image[0].image}` : '/uploads/default.png';
 
@@ -145,7 +169,7 @@
               if (stock > 30) {
                 stockClass = "bg-success";
                 stockText = "in stock";
-              } else if (stock > 1) { // for example, between 11 and 30
+              } else if (stock > 1) { 
                 stockClass = "bg-warning";
                 stockText = "low stock";
               } else {
@@ -187,17 +211,69 @@
                         </td>
                       </tr>
                  `;
-              $('.Product_list').html(html);
-            });
-
-
+                });
+            
+             
+             $('.Product_list').html(html);
 
           } else {
-            Message(response.message, false)
+             $('.Product_list').html(`
+                    <tr>
+                      <td colspan="12" class="text-center text-danger fw-bold">
+                        Product not found
+                      </td>
+                    </tr>
+                  `);
+              return;
           }
+
+          //pagiation
+          let pages = response.pages;
+          let totalPage = pages.totalPage;
+          let currentPage = pages.currentPage;
+          
+          let pagination = `
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li onclick="PreviousPage(${currentPage})" class="page-item ${currentPage == 1 ? "d-none" : ""}" >
+              <a class="page-link" href="javascript:void(0)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>`;
+
+      for (let i = 1; i <= totalPage; i++) {
+        pagination += `
+          <li onclick="ProductPage(${i})" class="page-item ${i == currentPage ? "active" : ""}" >
+            <a class="page-link" href="javascript:void(0)">${i}</a>
+          </li>`;
+      }
+
+      pagination += `
+            <li onclick="NextPage(${currentPage})" class="page-item ${currentPage == totalPage ? "d-none" : ""}" >
+              <a class="page-link" href="javascript:void(0)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      `;
+
+           $('.show_page').html(pagination);
         }
       });
     }
+
+    function ProductPage(page){
+      productList(page);
+    }
+    function NextPage(page){
+      ProductPage(page+1);
+    }
+    function PreviousPage(page){
+      ProductPage(page-1);
+    }
+   
+   
     productList();
 
 
@@ -260,46 +336,20 @@
             $('.color_edit').html(html);
             // end
 
-            let productImages = response.data.productImage;
-            $.each(productImages, function (key, value) { 
+          let productImages = response.data.productImage;
+          $.each(productImages, function(key, value){
+              let imageUrl = "/uploads/product/" + value.image; // relative path from public
               $('.show-images_edit_old').append(`
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 position-relative">
-                          <div class="card border-0 shadow-sm text-center p-3 position-relative" 
-                              style="border-radius: 15px; transition: 0.3s ease;">
-
-                            <!-- Cancel (X) Button -->
-                            <button
-                              onclick="CancelImage(this,'${value.image}')"
-                            type="button" class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 border bg-danger rounded-circle shadow-sm btn-remove" 
-                                    style="width: 28px; height: 28px; line-height: 1; padding: 0; font-size: 16px;">
-                              &times;
-                            </button>
-
-                            <input type="text" name="image_uploads[]" value="${value.image}">
-
-                            <img 
-                              src="{{ asset('uploads/product/${value.image}') }}" 
-                              alt="preview" 
-                              class="card-img-top rounded-circle mx-auto border" 
-                              style="
-                                width: 100px; 
-                                height: 100px; 
-                                object-fit: cover; 
-                                margin-top: 10px;
-                                transition: 0.3s ease;
-                              "
-                              onmouseover="this.style.transform='scale(1.08)'"
-                              onmouseout="this.style.transform='scale(1)'"
-                            >
-
-                            <div class="card-body p-2">
-                              <p class="card-text text-muted small mb-0">Image Preview</p>
-                            </div>
-                          </div>
-                        </div>
+                  <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+                      <div class="card border-0 shadow-sm text-center p-3" style="border-radius:15px;">
+                          <input type="hidden" name="new_image_upload[]" value="${value.image}"/>
+                          <img src="${imageUrl}" alt="${value.image}" class="card-img-top mx-auto" style="width:100px;height:100px;object-fit:cover;">
+                      </div>
+                  </div>
               `);
-            });
-            
+          });
+
+
 
 
           }
@@ -346,7 +396,7 @@
         dataType: "json",
         success: function (response) {
           if (response.status == 200) {
-            $('#image').val('')
+            // $('#image').val('')
 
             let img = ``
             let images = response.images;

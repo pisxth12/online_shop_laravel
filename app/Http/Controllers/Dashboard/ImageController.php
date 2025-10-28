@@ -26,7 +26,9 @@ class ImageController extends Controller
     }
     public function cancel(Request $request){
        $temp_path = public_path("uploads/temp/". $request->image);
-       if(File::exists($temp_path)){
+       $product_path = public_path('uploads/product'. $request->image);
+// || File::exists($product_path)
+       if(File::exists($temp_path) ){
         File::delete($temp_path);
         return response([
             'status'=>200,

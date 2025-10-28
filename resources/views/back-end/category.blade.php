@@ -195,7 +195,7 @@
                         </li>
                   `;
                  }
-                page +=` <li onclick="NextPage(${currentPage})" class="page-item ${(currentPage==totalPage)? 'd-none':'block'}"" >
+                page +=` <li onclick="NextPage(${currentPage})" class="page-item ${(currentPage==totalPage)? 'd-none':'block'}" >
                     <a class="page-link" href="javascript:void(0)" aria-label="Next">
                       <span aria-hidden="true">&raquo;</span>
                       <span class="sr-only">Next</span>

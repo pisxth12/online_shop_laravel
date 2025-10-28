@@ -77,26 +77,60 @@ class ProductController extends Controller
         }
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $products = Products::orderBy('id', 'desc')
-            ->with(['Category', 'Brand', 'Image'])
-            ->get()
-            ->map(function($p){
-                $p->colors_data = $p->colors()->get();
-                return $p;
+        $limit = 5;
+        $page = $request->page ?? 1;
+        $offset = ($page-1) * $limit;
+        $search = $request->search;
+
+        $query = Products::with(['Category','Brand', 'Image']);
+
+
+        if(!empty($search)){
+           $query->where(function($q) use ($search){
+             $q->where('name', 'like', '%'. $search. '%')
+            ->orWhereHas('Category' ,function($q2) use ($search){
+                $q2->where('name','like','%'. $search .'%');
+            })
+            ->orWhereHas('Brand', function ($q3) use ($search){
+                $q3->where('name','like','%'. $search .'%');
             });
-        // foreach ($products as $p) {
-        //     $colorIds = array_filter(explode(',', $p->color));
+           });
+        }
+        $totalRecord = $query->count();
+        $products = $query->orderBy('id', 'desc')->limit($limit)->offset($offset)->get()
+        ->map(function($field){
+            $field->colors_data = $field->colors()->get();
+            return $field;
+        });
 
-        //     $p->colors_data = \App\Models\Color::whereIn('id', $colorIds)->get();
-        // }
+        $totalPage = ceil($totalRecord / $limit);
 
+        if($products->isEmpty()){
+            return response()->json([
+                'status'=>404,
+                'message'=>"Product not found",
+                'products'=>[],
+                'page'=>[
+                    'totalRecord'=> $totalRecord,
+                    'totalPage'=>$totalPage,
+                    'currentPage'=> $page
+                ]
+            ]);
+        }
         return response()->json([
-            'status' => 200,
-            'message' => "Product list get successfully",
-            'products' => $products
+                'status' => 200,
+                'message' => 'Product list get successfully',
+                'pages' => [
+                    'totalRecord' => $totalRecord,
+                    'totalPage' => $totalPage,
+                    'currentPage' => $page
+        ],
+        'products'=> $products
         ]);
+
+        
     }
 
     public function data()
@@ -173,34 +207,53 @@ class ProductController extends Controller
     }
 
     public function update(Request $request){
-        $product = Products::find($request->id_edit);
-        // $validator = Validator::make($request->all(), [
-        //     ''
-        // ]);
+    $product = Products::find($request->id_edit);
 
-        $product->name = $request->title;
-        $product->desc = $request->desc;
-        $product->qty = $request->qty;
-        $product->price = $request->price;
+    // Update product info
+    $product->name = $request->title;
+    $product->desc = $request->desc;
+    $product->qty = $request->qty;
+    $product->price = $request->price;
+    $product->brand_id = $request->brand;
+    $product->category_id = $request->category;
+    $product->color = implode(',', $request->color);
 
-        $product->brand_id = $request->brand;
-        $product->category_id = $request->category;
-        $product->color = implode(',', $request->color);
+    $product->save(); // save basic info first
 
-        if($request->hasFile('image_uploads')){
-            
+    if($request->has('image_uploads') && count($request->image_uploads)>0){
+        $oldImages = ProductImage::where('product_id', $product->id)->get();
+        // delete old image
+        foreach($oldImages as $img){
+            $oldPath = public_path('uploads/product/'. $img->image);
+            if(File::exists($oldPath)){
+                File::delete($oldPath);
+            }
+            $img->delete();   
         }
 
-        $product->save();
+        foreach($request->image_uploads as $fileName){
+            $tempPath = public_path('uploads/temp/'. $fileName);
+            $productPath  = public_path('uploads/product/'. $fileName);   
 
+            if(File::exists($tempPath)){
+                File::move($tempPath , $productPath);
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $fileName;
+                $productImage->save();
+            }
+        }
 
-        return response([
-            'status'=>200,
-            'message'=>"Product founded". $request->id_edit,
-            'data'=>[
-                'product'=> $product,
-                
-            ]
-        ]);
     }
+
+    return response()->json([
+        'status' => 200,
+        'message' => "Product updated successfully",
+        'data' => [
+            'product' => $product,
+        ]
+    ]);
+}
+
+
 }

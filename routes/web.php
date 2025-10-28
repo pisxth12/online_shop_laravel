@@ -20,23 +20,24 @@ Route::group(['prefix'=>'admin'],function(){
     Route::post('/login',[AuthController::class,'authenticate'])->name('auth.authenticate');
 
 
-    Route::middleware(DashboardMiddleware::class)->group(function(){
-        Route::get('/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
-    });
-
-
     Route::middleware(AuthMiddleware::class)->group(function(){
 
     //logout
     Route::get('/logout',[AuthController::class,'logout'])->name('auth.logout');
 
-    // user
-    Route::get('/user',[UserController::class,'index'])->name("user.index");
-    Route::get('/user/list',[UserController::class, 'list'])->name('user.list');
-    Route::post('/user/store',[UserController::class,'store'])->name('user.store');
-    Route::post('/user/delete',[UserController::class,'delete'])->name('user.delete');
 
+    // dashboard route
+      Route::middleware(DashboardMiddleware::class)->group(function(){
+        Route::get('/dashboard',[DashboardController::class ,'index'])->name('dashboard.index');
+           // user
+        Route::get('/user',[UserController::class,'index'])->name("user.index");
+        Route::get('/user/list',[UserController::class, 'list'])->name('user.list');
+        Route::post('/user/store',[UserController::class,'store'])->name('user.store');
+        Route::post('/user/delete',[UserController::class,'delete'])->name('user.delete');
+    });
+    
 
+ 
      //brand
     Route::get('/brand',[BrandController::class,'index'])->name("brand.index");
     Route::get('/brand/list',[BrandController::class, 'list'])->name('brand.list');
