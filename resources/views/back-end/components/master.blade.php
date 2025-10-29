@@ -50,16 +50,6 @@
 
 <body>
   <div class="container-scroller">
-
-
-
-
-
-
-
-
-
-
     <!-- partial:partials/_navbar.html -->
     @include('back-end.components.navbar')
     <!-- partial -->
@@ -116,7 +106,7 @@
         <div class="modal-body">
           <div class="search-content ">
             <div class="form-group d-flex gap-2">
-                <input type="search" name="search"  placeholder="Search..." class="form-control border-0 search_box" >
+                <input type="text" name="search"  placeholder="Search..." class="form-control border-0 search_box" >
               <div type="button" id="btnSearch" class="btn btn-primary btnSearch text-center d-flex justify-content-center align-items-center">Search</div>
             </div>
             <button type="button" class="btn btn-secondary d-flex justify-content-end w-full" data-dismiss="modal">Close</button>

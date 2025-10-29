@@ -5,7 +5,7 @@
 </div>
 @elseif(Session::has('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{ Session::get('error') }}
+    <strong>Error </strong>{{ Session::get('error') }} 
     <button type="button" class="close" data-dismiss="alert">&times;</button>
 </div>
 @endif

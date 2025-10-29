@@ -7,6 +7,7 @@ use App\Http\Controllers\Dashboard\ColorController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ImageController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Middleware\Dashboard\AuthMiddleware;
 use App\Http\Middleware\Dashboard\DashboardMiddleware;
@@ -74,6 +75,14 @@ Route::group(['prefix'=>'admin'],function(){
     Route::post('/product/edit',[ProductController::class,'edit'])->name('product.edit');
     Route::post('/product/update',[ProductController::class,'update'])->name('product.update');
     Route::post('/product/delete',[ProductController::class,'delete'])->name('product.delete');
+
+    //profile router
+    Route::get('/profile',[ProfileController::class,'index'])->name('profile.index');
+    Route::post('/profile/change/password',[ProfileController::class, 'changePassword'])->name('profile.change.password');
+    Route::post('/profile/update',[ProfileController::class,'profileUpdate'])->name('update.profile');
+    Route::post('/profile/cancel',[ProfileController::class, 'cancel'])->name('cancel.avatar');
+    Route::post('/profile/change/avata',[ProfileController::class, 'changeAvata'])->name('change.avata');
+
 
     //upload images
     Route::post('/product/upload',[ImageController::class,'uploads'])->name('product.upload');

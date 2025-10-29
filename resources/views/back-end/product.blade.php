@@ -30,10 +30,8 @@
             <div class="search-content border-l-2">
               <div class=" d-flex gap-2">
                 <div class="search-content d-flex justify-content-between border align-items-center">
-
                   <input type="text" name="search_color" placeholder="Search..."
                     class="search_color_box form-control border-0 search_box">
-
                   <i class="bi bi-search search_icon px-2 btnSearch_color"></i>
                 </div>
                 <div type="button" id="btnSearch_color"
@@ -136,6 +134,13 @@
       }
     });
 
+    $(document).on('click','.btnSearch_color', function(){
+
+      let searchValue = $(".search_color_box").val();
+      productList(1, searchValue);
+      
+    })
+
 
 
 
@@ -180,10 +185,10 @@
               html += `
                   <tr>
                         <td>${value.id}</td>
-                        <td>
-                         <img src="${imageSrc}" alt="${value.name}">
-
-                        </td>
+                      ${value.image.length > 0       
+                      ? `<td><img src="${imageSrc}" alt="${value.name}" style="width:60px; height:60px; object-fit:cover;"></td>` 
+                      : `<td class="">😒 no image</td>`
+                        }
                         <td>${value.name}</td>
                         <td>${value.price}</td>
                         <td>${value.qty}</td>
@@ -192,9 +197,9 @@
                         </td>
                         <td>${value.brand.name}</td>
                         <td>${value.category.name}</td>
-                        <td class=" d-flex flex-wrap gap-1">
+                        <td class=" d-flex  gap-1">
                             ${value.colors_data.map(color => `
-                              <div class="rounded-circle border border-dark me-1" 
+                              <div class="rounded-circle border  border-dark me-1" 
                                   style="width: 10px; height: 10px; background-color: ${color.color_code};">
                               </div>
                             `).join('')}
@@ -278,6 +283,7 @@
 
 
     const editProduct = (id) => {
+     
       $.ajax({
         type: "post",
         url: "{{ route('product.edit') }}",
@@ -340,12 +346,37 @@
           $.each(productImages, function(key, value){
               let imageUrl = "/uploads/product/" + value.image; // relative path from public
               $('.show-images_edit_old').append(`
-                  <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
-                      <div class="card border-0 shadow-sm text-center p-3" style="border-radius:15px;">
-                          <input type="hidden" name="new_image_upload[]" value="${value.image}"/>
-                          <img src="${imageUrl}" alt="${value.image}" class="card-img-top mx-auto" style="width:100px;height:100px;object-fit:cover;">
-                      </div>
-                  </div>
+                   <div class="col-lg-3 col-md-4 col-sm-6 col-6 mb-4 position-relative">
+                          <div class="card border-0 shadow-sm text-center p-3 position-relative" 
+                              style="border-radius: 15px; transition: 0.3s ease;">
+
+                            <!-- Cancel (X) Button -->
+                            <button
+                              onclick="CancelImage(this,'${value.image}')"
+                            type="button" class="btn btn-light btn-sm position-absolute top-0 end-0 m-2 border bg-danger rounded-circle shadow-sm btn-remove" 
+                                    style="width: 28px; height: 28px; line-height: 1; padding: 0; font-size: 16px;">
+                              &times;
+                            </button>
+
+                            <input type="hidden" name="old_image" value="${value}">
+
+                            <img 
+                       
+                              src="${imageUrl}" 
+
+                              class="card-img-top rounded-circle mx-auto border" 
+                              style="
+                                width: 100px; 
+                                height: 100px; 
+                                object-fit: cover; 
+                                margin-top: 10px;
+                                transition: 0.3s ease;
+                              "
+                              onmouseover="this.style.transform='scale(1.08)'"
+                              onmouseout="this.style.transform='scale(1)'"
+                            >
+                          </div>
+                        </div>
               `);
           });
 
@@ -398,11 +429,11 @@
           if (response.status == 200) {
             // $('#image').val('')
 
-            let img = ``
+            
             let images = response.images;
             $.each(images, function (key, value) {
-              img += `
-                      <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 position-relative">
+            $('.show-images_edit_old').append(
+              ` <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 position-relative">
                           <div class="card border-0 shadow-sm text-center p-3 position-relative" 
                               style="border-radius: 15px; transition: 0.3s ease;">
 
@@ -436,10 +467,9 @@
                               <p class="card-text text-muted small mb-0">Image Preview</p>
                             </div>
                           </div>
-                        </div>
-                   `;
+                        </div>`
+            )
             });
-            $('.show-images').html(`<div class="row">${img}</div>`);
           }
         }
       });
@@ -521,6 +551,7 @@
     }
 
     const StoreProduct = (form) => {
+       $('.show-images').html("");
       let payloads = new FormData($(form)[0]);
       $.ajax({
         type: "POST",

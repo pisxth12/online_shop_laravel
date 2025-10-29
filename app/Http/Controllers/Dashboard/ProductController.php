@@ -223,13 +223,13 @@ class ProductController extends Controller
     if($request->has('image_uploads') && count($request->image_uploads)>0){
         $oldImages = ProductImage::where('product_id', $product->id)->get();
         // delete old image
-        foreach($oldImages as $img){
-            $oldPath = public_path('uploads/product/'. $img->image);
-            if(File::exists($oldPath)){
-                File::delete($oldPath);
-            }
-            $img->delete();   
-        }
+        // foreach($oldImages as $img){
+        //     $oldPath = public_path('uploads/product/'. $img->image);
+        //     if(File::exists($oldPath)){
+        //         File::delete($oldPath);
+        //     }
+        //     $img->delete();   
+        // }
 
         foreach($request->image_uploads as $fileName){
             $tempPath = public_path('uploads/temp/'. $fileName);

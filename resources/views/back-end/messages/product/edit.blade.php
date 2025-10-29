@@ -35,7 +35,6 @@
                         <div class="form-group">
 
                        
-                         <div class="show-images_edit_old d-flex flex-wrap  "></div>
                        
 
                             <label for="">Product Image</label> 
@@ -45,7 +44,8 @@
                             <button type="button" onclick="productUpload('.formEditProduct')" class=" btn btn-primary upload_images">Uploads</button> 
                         </div>
                         
-                        <div class="show-images row"></div>
+                        <div class="show-images show-images_edit_old row"></div>
+                        
                         
      
                     </div> 

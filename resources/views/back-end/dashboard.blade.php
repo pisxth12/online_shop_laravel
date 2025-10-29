@@ -62,7 +62,9 @@
                         <div class="col-lg-3 col-md-6">
                             <div class="d-flex">
                                 <div class="wrapper">
-                                    <h3 class="mb-0 font-weight-semibold">32,451</h3>
+                                    {{-- <h3 class="mb-0 font-weight-semibold">32,451</h3> --}}
+                                    <h3 class="mb-0 font-weight-semibold">{{ App\Models\User::count() }}</h3>
+
                                     <h5 class="mb-0 font-weight-medium text-primary">Visits</h5>
                                     <p class="mb-0 text-muted">+14.00(+0.50%)</p>
                                 </div>
