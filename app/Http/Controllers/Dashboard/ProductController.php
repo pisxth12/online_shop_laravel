@@ -18,6 +18,7 @@ class ProductController extends Controller
 {
     public function index()
     {
+
         return view('back-end.product');
     }
 
@@ -81,56 +82,54 @@ class ProductController extends Controller
     {
         $limit = 5;
         $page = $request->page ?? 1;
-        $offset = ($page-1) * $limit;
+        $offset = ($page - 1) * $limit;
         $search = $request->search;
 
-        $query = Products::with(['Category','Brand', 'Image']);
+        $query = Products::with(['Category', 'Brand', 'Image']);
 
 
-        if(!empty($search)){
-           $query->where(function($q) use ($search){
-             $q->where('name', 'like', '%'. $search. '%')
-            ->orWhereHas('Category' ,function($q2) use ($search){
-                $q2->where('name','like','%'. $search .'%');
-            })
-            ->orWhereHas('Brand', function ($q3) use ($search){
-                $q3->where('name','like','%'. $search .'%');
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('Category', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('Brand', function ($q3) use ($search) {
+                        $q3->where('name', 'like', '%' . $search . '%');
+                    });
             });
-           });
         }
         $totalRecord = $query->count();
         $products = $query->orderBy('id', 'desc')->limit($limit)->offset($offset)->get()
-        ->map(function($field){
-            $field->colors_data = $field->colors()->get();
-            return $field;
-        });
+            ->map(function ($field) {
+                $field->colors_data = $field->colors()->get();
+                return $field;
+            });
 
         $totalPage = ceil($totalRecord / $limit);
 
-        if($products->isEmpty()){
+        if ($products->isEmpty()) {
             return response()->json([
-                'status'=>404,
-                'message'=>"Product not found",
-                'products'=>[],
-                'page'=>[
-                    'totalRecord'=> $totalRecord,
-                    'totalPage'=>$totalPage,
-                    'currentPage'=> $page
+                'status' => 404,
+                'message' => "Product not found",
+                'products' => [],
+                'page' => [
+                    'totalRecord' => $totalRecord,
+                    'totalPage' => $totalPage,
+                    'currentPage' => $page
                 ]
             ]);
         }
         return response()->json([
-                'status' => 200,
-                'message' => 'Product list get successfully',
-                'pages' => [
-                    'totalRecord' => $totalRecord,
-                    'totalPage' => $totalPage,
-                    'currentPage' => $page
-        ],
-        'products'=> $products
+            'status' => 200,
+            'message' => 'Product list get successfully',
+            'pages' => [
+                'totalRecord' => $totalRecord,
+                'totalPage' => $totalPage,
+                'currentPage' => $page
+            ],
+            'products' => $products
         ]);
-
-        
     }
 
     public function data()
@@ -176,84 +175,81 @@ class ProductController extends Controller
             'message' => "Product delete successfully",
         ]);
     }
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $product = Products::find($request->id);
-        if(!$product){
+        if (!$product) {
             return response([
-                'status'=>404,
-                'message'=>"Product not found"
+                'status' => 404,
+                'message' => "Product not found"
             ]);
         }
 
 
         $categories = Category::orderBy('id', 'asc')->get();
         $brands = Brand::orderBy('id', 'asc')->get();
-        $colors = Color::orderBy('id','asc')->get();
-        $productImage = ProductImage::where('product_id',$request->id)->get();
+        $colors = Color::orderBy('id', 'asc')->get();
+        $productImage = ProductImage::where('product_id', $request->id)->get();
 
 
-          return response()->json([
-                'status'=>200,
-                'data'=>[
-                    'product'=>$product,
-                    'productImage'=> $productImage,
-                    'categories'=> $categories,
-                    'brands'=> $brands,
-                    'colors'=>$colors
-                ]
-            ]);
-
-
+        return response()->json([
+            'status' => 200,
+            'data' => [
+                'product' => $product,
+                'productImage' => $productImage,
+                'categories' => $categories,
+                'brands' => $brands,
+                'colors' => $colors
+            ]
+        ]);
     }
 
-    public function update(Request $request){
-    $product = Products::find($request->id_edit);
+    public function update(Request $request)
+    {
+        $product = Products::find($request->id_edit);
 
-    // Update product info
-    $product->name = $request->title;
-    $product->desc = $request->desc;
-    $product->qty = $request->qty;
-    $product->price = $request->price;
-    $product->brand_id = $request->brand;
-    $product->category_id = $request->category;
-    $product->color = implode(',', $request->color);
+        // Update product info
+        $product->name = $request->title;
+        $product->desc = $request->desc;
+        $product->qty = $request->qty;
+        $product->price = $request->price;
+        $product->brand_id = $request->brand;
+        $product->category_id = $request->category;
+        $product->color = implode(',', $request->color);
 
-    $product->save(); // save basic info first
+        $product->save(); // save basic info first
 
-    if($request->has('image_uploads') && count($request->image_uploads)>0){
-        $oldImages = ProductImage::where('product_id', $product->id)->get();
-        // delete old image
-        // foreach($oldImages as $img){
-        //     $oldPath = public_path('uploads/product/'. $img->image);
-        //     if(File::exists($oldPath)){
-        //         File::delete($oldPath);
-        //     }
-        //     $img->delete();   
-        // }
+        if ($request->has('image_uploads') && count($request->image_uploads) > 0) {
+            $oldImages = ProductImage::where('product_id', $product->id)->get();
+            // delete old image
+            // foreach($oldImages as $img){
+            //     $oldPath = public_path('uploads/product/'. $img->image);
+            //     if(File::exists($oldPath)){
+            //         File::delete($oldPath);
+            //     }
+            //     $img->delete();   
+            // }
 
-        foreach($request->image_uploads as $fileName){
-            $tempPath = public_path('uploads/temp/'. $fileName);
-            $productPath  = public_path('uploads/product/'. $fileName);   
+            foreach ($request->image_uploads as $fileName) {
+                $tempPath = public_path('uploads/temp/' . $fileName);
+                $productPath  = public_path('uploads/product/' . $fileName);
 
-            if(File::exists($tempPath)){
-                File::move($tempPath , $productPath);
-                $productImage = new ProductImage();
-                $productImage->product_id = $product->id;
-                $productImage->image = $fileName;
-                $productImage->save();
+                if (File::exists($tempPath)) {
+                    File::move($tempPath, $productPath);
+                    $productImage = new ProductImage();
+                    $productImage->product_id = $product->id;
+                    $productImage->image = $fileName;
+                    $productImage->save();
+                }
             }
         }
 
+        return response()->json([
+            'status' => 200,
+            'message' => "Product updated successfully",
+            'data' => [
+                'product' => $product,
+            ]
+        ]);
     }
-
-    return response()->json([
-        'status' => 200,
-        'message' => "Product updated successfully",
-        'data' => [
-            'product' => $product,
-        ]
-    ]);
-}
-
-
 }

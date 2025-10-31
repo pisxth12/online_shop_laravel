@@ -141,7 +141,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody class="user_list">
+                        <tbody class="user_list " style="overflow-x: scroll;">
 
                         </tbody>
                     </table>
@@ -225,7 +225,7 @@
                               <td>${value.id}</td>
                               <td>${value.name}</td>
                               <td>${value.email}</td>
-                              <td>${(value.role == 1) ? "admin" : "user"}</td>
+                              <td class="${(value.role == 1) ? "text-success p-1 fw-bold" : "bg-secondary p-1"}" >${(value.role == 1) ? "admin" : "user"}</td>
 
                               <td>
                                 <a href="#" class="btn btn-primary btn-sm">view</a>

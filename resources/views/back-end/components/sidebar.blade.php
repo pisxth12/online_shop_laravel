@@ -15,12 +15,16 @@
         </li>
 
       <li class="nav-item nav-category">Main Menu</li>
-      <li class="nav-item">
+
+      @if (Auth::user()->role ==1)
+        <li class="nav-item">
         <a class="nav-link" href="{{ route('dashboard.index') }}">
           <i class="menu-icon typcn typcn-document-text"></i>
           <span class="menu-title">Dashboard</span>
         </a>
       </li>
+      @endif
+      
 
       <li class="nav-item">
         <a class="nav-link" href="{{ route('profile.index') }}">

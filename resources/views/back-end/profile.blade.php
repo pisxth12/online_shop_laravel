@@ -1,14 +1,15 @@
 @extends('back-end.components.master')
 @section('contens')
   <div class="row">
-
     <div class="col-md-4 grid-margin">
       <div class="card">
         <div class="card-body">
-         
+          
+        
         </div>
       </div>
     </div>
+    @include('back-end.messages.profile.viewProfile')
 
     <div class="col-md-8 grid-margin">
         <div class="card">
@@ -33,13 +34,22 @@
                                     {{-- @if ($user->image != null) --}}
                                       {{-- <img src="{{ asset('uploads/image/'.$user->image) }}" alt="">
                                     @else --}}
-                                      <img class="rounded-circle profile-update" src="{{ asset('uploads/user/'.Auth::user()->image) }}" alt="">
+                                    @if (Auth::user()->image > 0)
+                                    <img class="rounded-circle profile-update" src="{{ asset('uploads/user/'.Auth::user()->image) }}" alt="">
+                                    @elseif (Auth::user()->image == null)
+                                    <img class="rounded-circle profile-update" src="https://t4.ftcdn.net/jpg/05/89/93/27/360_F_589932782_vQAEAZhHnq1QCGu5ikwrYaQD0Mmurm0N.jpg" alt="">
+
+                                    @endif
                                     {{-- @endif --}}
                                     
                                     <label for="image" class=" btn choose"><i class="bi bi-pen text-primary"></i></label>
                                     <br><br>
                                     <button onclick="upldateAvatar('.formUpdateProfile')" onclick="" type="button" class=" btn btn-info btn-sm"><i class="bi bi-upload"></i></button>
                                     <button onclick="cancelAvatar({{ Auth::user()->id }})" type="button" class=" btn btn-danger btn-sm"><i class="bi bi-trash3"></i></button>
+                                    
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  type="button" class=" btn btn-facebook btn-sm"><i class="bi bi-card-image"></i></button>
+                                    
+
                                     <input type="file" name="image" id="image" class="d-none">
                                 </div>
                             </div>
@@ -61,17 +71,17 @@
 
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <input type="text" class="form-control" name="address" id="address">
+                                <input type="text" class="form-control" value="{{ $address->address ?? ''}}" name="address" id="address">
                             </div>
 
                             <div class="form-group">
                                 <label for="facebook">Facebook</label>
-                                <input type="text" class="form-control" id="facebook" name="link[]"  placeholder="link to you facebook profile">
+                                <input type="text" class="form-control" value="{{ $contacts['Facebook'] ?? '' }}" id="facebook" name="link[]"  placeholder="link to you facebook profile">
                             </div>
 
                             <div class="form-group">
                                 <label for="telegram">Telegram</label>
-                                <input type="text" class="form-control" id="telegram"  name="link[]" placeholder="link to you telegram account">
+                                <input type="text" class="form-control" value="{{ $contacts['Telegram'] ?? '' }}" id="telegram"  name="link[]" placeholder="link to you telegram account">
                             </div>
 
                             
@@ -170,5 +180,22 @@
                 }
             });
         }
+
+
+
+    const downloadActiveImage = ()=>{
+        $('#downloadBtn').on('click',function(){
+            const activeImg = $('#carouselExampleFade .carousel-item.active img');
+            if(activeImg.length){
+                const imgSrc = activeImg.attr('src');
+                const filename = imgSrc.split('/').pop();
+                const link = document.createElement('a');
+                link.href = imgSrc;
+                link.download = filename;
+                link.click();
+            }
+        });
+    }    
+
    </script>
 @endsection

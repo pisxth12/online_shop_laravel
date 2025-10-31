@@ -7,7 +7,7 @@
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-center">
       <ul class="navbar-nav">
-        <li class="nav-item font-weight-semibold d-none d-lg-block">Help : +050 2992 709</li>
+        <li class="nav-item font-weight-semibold d-none d-lg-block">Help : {{ Auth::user()->phone }}</li>
         <li class="nav-item dropdown language-dropdown">
           <a class="nav-link dropdown-toggle px-2 d-flex align-items-center" id="LanguageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
             <div class="d-inline-flex mr-0 mr-md-3">
@@ -152,7 +152,9 @@
             <img class="img-xs rounded-circle" src="{{ asset('uploads/user/'.Auth::user()->image) }}" alt="Profile image"> </a>
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
             <div class="dropdown-header text-center">
-              <img class="img-md rounded-circle" src="{{ asset('uploads/user/'.Auth::user()->image) }}" alt="Profile image">
+              <a href="{{ route('profile.index') }}">
+                    <img class="img-md rounded-circle" src="{{ asset('uploads/user/'.Auth::user()->image) }}" alt="Profile image">
+              </a>
               <p class="mb-1 mt-3 font-weight-semibold">{{ (Auth::check())? Auth::user()->name : "No name"   }}</p>
               <p class="font-weight-light text-muted mb-0">{{ (Auth::check()) ? Auth::user()->email : "No email" }}</p>
             </div>
