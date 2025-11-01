@@ -79,6 +79,7 @@ class CategoryController extends Controller
             $category = new Category();
             $category->name = $request->name;
             $category->status = $request->status;
+            $category->title = $request->title;
 
             $categoryImage = $request->input('category_image');
             if ($categoryImage && File::exists(public_path('uploads/temp/' . $categoryImage)) && is_file(public_path('uploads/temp/' . $categoryImage))) {
@@ -247,6 +248,7 @@ class CategoryController extends Controller
 
         // Update basic fields
         $category->name = $request->name;
+        $category->title= $request->title;
         $category->status = $request->status;
 
         // Default image value (in case no change)

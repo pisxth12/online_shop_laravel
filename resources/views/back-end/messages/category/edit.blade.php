@@ -18,6 +18,14 @@
                         <p></p>
                     </div>
 
+
+                    <div class="form-group mb-3">
+                        <label for="">Category title</label>
+                        <input type="text" name="title" class="title_edit form-control" placeholder="Enter category title">
+                        <p></p>
+                    </div>
+
+
                     <!-- Image Upload -->
                     <div class="form-group mb-3">
                         <label class="form-label fw-medium">Image</label>
@@ -32,7 +40,9 @@
                     </div>
 
                     {{-- preview image --}}
-                    <div class="show-image-category_edit show-image-category"></div>
+                    <div class="show-image-category_edit show-image-category ">
+                        
+                    </div>
 
               
 

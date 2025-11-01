@@ -12,9 +12,14 @@
 
           <!-- Category Name -->
           <div class="form-group mb-3">
-
             <label for="">Category Name</label>
             <input type="text" name="name" class="name form-control" placeholder="Enter category name">
+            <p></p>
+          </div>
+
+           <div class="form-group mb-3">
+            <label for="">Category title</label>
+            <input type="text" name="title" class="title form-control" placeholder="Enter category title">
             <p></p>
           </div>
 

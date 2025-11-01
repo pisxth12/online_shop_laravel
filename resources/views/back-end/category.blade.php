@@ -38,6 +38,7 @@
               <th>Category ID</th>
               <th>Image</th>
               <th>Category Name</th>
+              <th>Category title</th>
               <th>Status</th>
               <th>Ation</th>
             </tr>
@@ -167,6 +168,8 @@
                       <td>${value.id}</td>
                       <td><img width="100" src="/uploads/category/${value.image}" style="object-fit: cover"  alt=""></td>
                       <td>${value.name}</td>
+                      <td>${(value.title.length > 5) ? value.title.slice(0,6)+"..." : value.title}</td>
+
                       <td>${value.status == 1 ? '<label class="badge badge-success">Active</label>' : '<label class="badge badge-danger">Inactive</label>'}</td>
                       <td>
                         <button  class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditCategory" onclick="categoryEdit(${value.id})">Edit</button>
@@ -256,7 +259,10 @@
             `/uploads/category/${response.category.image}` : gif;
           if (response.status == 200) {
             $('.name_edit').val(response.category.name);
+            $('.title_edit').val(response.category.title);
             $("#category_id").val(response.category.id);
+            // $("#category_id").val(response.category.id);
+
 
             if (response.category.image != "") {
               let img = `

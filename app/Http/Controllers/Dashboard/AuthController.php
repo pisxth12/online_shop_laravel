@@ -13,12 +13,8 @@ class AuthController extends Controller
 {
     public function login()
     {
-
-        if (Auth::check()) {
-            return redirect()->route('category.index');
-        } else {
+            
             return view('back-end.auth.login');
-        }
     }
 
     public function logout()
