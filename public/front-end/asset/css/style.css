@@ -955,7 +955,9 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 }
 .product-item .product-thumb img {
   width: 100%;
-  height: auto;
+  height: 450px;
+  object-fit: cover;
+  object-position: center;
 }
 .product-item .product-thumb .bage {
   position: absolute;
@@ -1078,6 +1080,8 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 .product-modal .modal-content .modal-body .modal-image img {
   width: 100%;
   height: auto;
+  max-height: 450px;
+  object-fit: cover;
 }
 .product-modal .modal-content .modal-body .product-short-details h2 {
   margin-top: 0;

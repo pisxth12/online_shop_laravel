@@ -18,65 +18,75 @@ class ProductController extends Controller
 {
     public function index()
     {
+        $products = Products::limit(9)->get();
+        $categories = Category::limit(9)->get();
 
-        return view('back-end.product');
+        $data = [
+            'products'=>$products,
+            'categories'=> $categories
+        ] ;
+
+        return view('back-end.product',$data);
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'price' => 'required',
-            'qty' => 'required',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
+  public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'title' => 'required',
+        'price' => 'required',
+        'qty' => 'required',
+        'image.*' => 'nullable|image'
+    ]);
 
-        if ($validator->passes()) {
+    if ($validator->passes()) {
 
-            //save product
-            $product = new Products();
-            $product->name = $request->title;
-            $product->category_id = $request->category;
-            $product->desc = $request->desc;
-            $product->price = $request->price;
-            $product->qty = $request->qty;
-            $product->brand_id = $request->brand;
+        //save product
+        $product = new Products();
+        $product->name = $request->title;
+        $product->category_id = $request->category;
+        $product->desc = $request->desc;
+        $product->price = $request->price;
+        $product->qty = $request->qty;
+        $product->brand_id = $request->brand;
+        $product->user_id = Auth::user()->id;
+        $product->color = implode(",", $request->color);
+        $product->status = $request->status;
+        $product->save();
 
-            $product->user_id = Auth::user()->id;
-            $product->color = implode(",", $request->color);
-            $product->status = $request->status;
-            $product->save();
+        $images = [];
+        
+       
+        if ($request->hasFile('image')) {
+            foreach ($request->file('image') as $file) {
+                $fileName = rand(0,999999999) . '.' . $file->getClientOriginalExtension();
+                
+                $file->move(public_path('uploads/product'), $fileName);
+                
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $fileName;
+                $productImage->save();
 
-            if ($request->image_uploads) {
-                $images = $request->image_uploads;
-                foreach ($images as $img) {
-                    $image = new ProductImage();
-                    $image->image = $img;
-                    $image->product_id = $product->id;
-                    if (File::exists(public_path("uploads/temp/$img"))) {
-                        File::copy(public_path("uploads/temp/$img"), public_path("uploads/product/$img"));
-                        File::delete(public_path("uploads/temp/$img"));
-                    }
-                    $image->save();
-                }
+                $images[] = $productImage;
             }
-
-
-            return response([
-                'status' => 200,
-                'message' => 'Prodcut add success',
-                "data" => [
-                    'image' => $images
-                ]
-            ]);
-        } else {
-            return response()->json([
-                'status' => 500,
-                'message' => "error validator",
-                'errors' => $validator->errors()
-            ]);
         }
+
+        return response([
+            'status' => 200,
+            'message' => 'Product add success',
+            "data" => [
+                'product_id' => $product->id,
+                'images' => $images
+            ]
+        ]);
+    } else {
+        return response()->json([
+            'status' => 500,
+            'message' => "error validator",
+            'errors' => $validator->errors()
+        ]);
     }
+}
 
     public function list(Request $request)
     {
@@ -221,14 +231,6 @@ class ProductController extends Controller
 
         if ($request->has('image_uploads') && count($request->image_uploads) > 0) {
             $oldImages = ProductImage::where('product_id', $product->id)->get();
-            // delete old image
-            // foreach($oldImages as $img){
-            //     $oldPath = public_path('uploads/product/'. $img->image);
-            //     if(File::exists($oldPath)){
-            //         File::delete($oldPath);
-            //     }
-            //     $img->delete();   
-            // }
 
             foreach ($request->image_uploads as $fileName) {
                 $tempPath = public_path('uploads/temp/' . $fileName);

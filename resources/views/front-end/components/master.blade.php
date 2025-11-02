@@ -64,6 +64,8 @@
     <script src="{{ asset('front-end/asset/js/script.js') }} "></script>
     
 
+@yield('scripts')
+
 
   </body>
   </html>

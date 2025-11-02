@@ -390,7 +390,7 @@
       });
     }
    
-    const upldateProduct = (form) =>{
+    const updateProduct = (form) =>{
       let payloads = new FormData($(form)[0]);
       $.ajax({
         type: "post",
@@ -409,6 +409,7 @@
               document.querySelectorAll('.modal-backdrop').forEach(function(el){
                   el.remove();
               });
+              productList()
 
               Message(response.message)
           }
@@ -432,7 +433,7 @@
             
             let images = response.images;
             $.each(images, function (key, value) {
-            $('.show-images_edit_old').append(
+            $('.show-images').append(
               ` <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 position-relative">
                           <div class="card border-0 shadow-sm text-center p-3 position-relative" 
                               style="border-radius: 15px; transition: 0.3s ease;">
@@ -567,6 +568,7 @@
             $('#modalCreateProduct').modal('show');     // Hide the modal
             $('.modal-backdrop').remove();
             // Remove the overlay
+             $('.show-images').html("");
             $("form").trigger('reset');                   // Reset all form inputs
             $('input').removeClass('is-invalid')
               .siblings('p')

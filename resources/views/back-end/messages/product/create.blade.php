@@ -15,7 +15,7 @@
                         <div class="form-group"> 
                             <label for="title">Product Name</label> 
                             <input type="text" class="title_add form-control" name="title" > 
-                            <p class="pp">d</p>
+                            <p></p>
                         </div> 
  
                         <div class="form-group"> 
@@ -41,9 +41,9 @@
                             <p></p>
                             <button type="button" onclick="productUpload('.formCreateProduct')" class=" btn btn-primary upload_images">Uploads</button> 
                         </div>
-                        
                         <div class="show-images row">
-                          
+                            
+                        
                         </div>
      
                     </div> 
