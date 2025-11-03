@@ -40,11 +40,12 @@
                             <input type="file" id="image" class="image_add form-control" multiple name="image[]" required> 
                             <p></p>
                             <button type="button" onclick="productUpload('.formCreateProduct')" class=" btn btn-primary upload_images">Uploads</button> 
-                        </div>
-                        <div class="show-images row">
+                             <div id="show-images" class="show-images row">
                             
                         
                         </div>
+                        </div>
+                       
      
                     </div> 
  

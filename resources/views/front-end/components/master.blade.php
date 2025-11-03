@@ -8,12 +8,11 @@
 	
 @include('front-end.components.navBar')
 
-@yield('slider')
 
 @yield('category')
-
-
 @yield('product')
+@yield('contents')
+
 
 @include('front-end.components.subscribe')
 

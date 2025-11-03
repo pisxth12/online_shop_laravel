@@ -33,4 +33,9 @@
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="{{ asset('front-end/asset/css/style.css') }}">
 
+
+  {{-- bootstrap link --}}
+  
+
+
 </head>

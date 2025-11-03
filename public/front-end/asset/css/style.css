@@ -98,7 +98,7 @@ blockquote {
   background: #000;
 }
 
-input[type=email], input[type=password], input[type=text], input[type=tel] {
+input[type=email], input[type=password], input[type=text], input[type=number], input[type=tel] {
   border-radius: 0;
   box-shadow: none;
   height: 45px;
@@ -106,7 +106,7 @@ input[type=email], input[type=password], input[type=text], input[type=tel] {
   font-weight: 200;
   font-size: 12px;
 }
-input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, input[type=tel]:focus {
+input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, input[type=tel]:focus,input[type=number]:focus {
   box-shadow: none;
   border: 1px solid #000;
 }
@@ -949,13 +949,18 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 
 .product-item {
   margin-bottom: 30px;
+  height: 400px !important;
+  overflow: hidden;
+  
 }
 .product-item .product-thumb {
   position: relative;
+  
 }
 .product-item .product-thumb img {
   width: 100%;
   height: 450px;
+  max-height: 310px;
   object-fit: cover;
   object-position: center;
 }
@@ -1030,7 +1035,10 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 
 .product-modal {
   background: rgba(255, 255, 255, 0.9);
+  height: auto;
+  padding: 40px;
   text-align: center;
+  
   padding: 0 !important;
 }
 .product-modal:before {
@@ -1062,6 +1070,7 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 @media (max-width: 480px) {
   .product-modal .modal-dialog {
     width: 100%;
+    
   }
 }
 @media (max-width: 768px) {
@@ -1168,7 +1177,12 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 .single-product .product-pagination li a i {
   vertical-align: middle;
 }
-
+.carousel-inner .item {
+  height: 600px;
+}
+.carousel-inner .item img{
+  height: 100%;
+}
 .single-product-slider .carousel .carousel-inner .carousel-caption {
   text-shadow: none;
   text-align: left;
@@ -1184,6 +1198,17 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
   width: 50%;
   font-weight: 200;
 }
+.carousel-inner .item {
+    text-align: center; /* center images */
+}
+
+.carousel-inner .item img {
+    max-height: 600px; /* max height */
+    width: auto;        /* maintain aspect ratio */
+    object-fit: contain; /* scale without cropping */
+    display: inline-block;
+}
+
 .single-product-slider .carousel .carousel-inner .carousel-caption .btn-main, .single-product-slider .carousel .carousel-inner .carousel-caption .btn-solid-border, .single-product-slider .carousel .carousel-inner .carousel-caption .btn-transparent, .single-product-slider .carousel .carousel-inner .carousel-caption .btn-small {
   margin-top: 20px;
 }
@@ -1199,8 +1224,9 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
   color: #555;
 }
 .single-product-slider .carousel .carousel-indicators li img {
-  height: auto;
+  height: 60px;
   width: 60px;
+  object-fit: cover;
 }
 .single-product-slider .carousel .carousel-control.right, .single-product-slider .carousel .carousel-control.left {
   background-image: none;
@@ -1297,7 +1323,7 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
   display: inline-block;
 }
 .single-product-details .product-category ul {
-  width: 140px;
+  width: 200px;
   display: inline-block;
 }
 .single-product-details .product-category ul li {
@@ -1459,6 +1485,8 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
     margin-bottom: 6px;
   }
 }
+
+
 
 .dashboard-wrapper {
   border: 1px solid #dedede;
@@ -1983,7 +2011,7 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 .account .block form p {
   margin-bottom: 20px;
 }
-.account .block form input[type=email], .account .block form input[type=password], .account .block form input[type=text] {
+.account .block form input[type=email], .account .block form input[type=password], .account .block form input[type=text],  form input[type=number] {
   border-radius: 0;
   box-shadow: none;
 }

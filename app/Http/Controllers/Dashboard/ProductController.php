@@ -35,7 +35,8 @@ class ProductController extends Controller
         'title' => 'required',
         'price' => 'required',
         'qty' => 'required',
-        'image.*' => 'nullable|image'
+        'image.*' => 'nullable|image',
+        // "image_uploads"=>'required'
     ]);
 
     if ($validator->passes()) {

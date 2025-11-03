@@ -428,12 +428,14 @@
         dataType: "json",
         success: function (response) {
           if (response.status == 200) {
-            // $('#image').val('')
+            // let imageUploads[] = $('#image').val();
+
 
             
             let images = response.images;
+            let image_uploads = ``;
             $.each(images, function (key, value) {
-            $('.show-images').append(
+              image_uploads +=
               ` <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 position-relative">
                           <div class="card border-0 shadow-sm text-center p-3 position-relative" 
                               style="border-radius: 15px; transition: 0.3s ease;">
@@ -447,7 +449,7 @@
                               &times;
                             </button>
 
-                            <input type="hidden" name="image_uploads[]" value="${value}">
+                            <input type="text" name="image_uploads[]" value="${value}">
 
                             <img 
                               src="{{ asset('uploads/temp') }}/${value}" 
@@ -469,8 +471,10 @@
                             </div>
                           </div>
                         </div>`
-            )
+            
             });
+             $('.show-images').html(image_uploads);
+
           }
         }
       });
@@ -578,25 +582,6 @@
 
             productList();
           } else {
-            // let errors = response.error;
-
-            // if(errors.title){
-            //   $('.title_add').addClass('is-invalid').siblings('p').addClass('text-danger').text(errors.title);
-            // }else{
-            //   $('.title_add').removeClass('is-invalid').siblings('p').removeClass('text-danger').text("");
-            // }
-
-            // if(errors.price){
-            //   $('.price_add').addClass('is-invalid').siblings('p').addClass('text-danger').text(errors.price);
-            // }else{
-            //   $('.price_add').removeClass('is-invalid').siblings('p').removeClass('text-danger').text("");
-            // }
-            //  if(errors.qty){
-            //   $('.qty_add').addClass('is-invalid').siblings('p').addClass('text-danger').text(errors.qty);
-            // }else{
-            //   $('.qty_add').removeClass('is-invalid').siblings('p').removeClass('text-danger').text("");
-            // }
-            // Message(response.message , false);
 
             let errors = response.errors;
             let fields = ['title', 'price', 'qty', 'image'];
