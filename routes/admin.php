@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\ImageController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Models\Front\BannerController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -40,6 +41,16 @@ Route::prefix('admin')->group(function(){
       Route::post('/brand/edit',[BrandController::class,'edit'])->name('brand.edit');
       Route::post('/brand/update',[BrandController::class,'update'])->name('brand.update');
       Route::post('/brand/delete',[BrandController::class,'delete'])->name('brand.delete');
+      
+      //banner
+      Route::get('/banner',[BannerController::class,'index'])->name("banner.index");
+      Route::get('/banner/list',[BannerController::class, 'list'])->name('banner.list');
+      Route::post('/banner/store',[BannerController::class,'store'])->name('banner.store');
+      Route::post('/banner/edit',[BannerController::class,'edit'])->name('banner.edit');
+      Route::post('/banner/update',[BannerController::class,'update'])->name('banner.update');
+      Route::post('/banner/delete',[BannerController::class,'delete'])->name('banner.delete');
+      Route::post('/banner/upload',[BannerController::class,'upload'])->name('banner.upload'); /*for img*/
+      Route::post('/banner/cancel-image',[BannerController::class,'cancelImage'])->name('banner.cancel.image');
       
       
       //category router

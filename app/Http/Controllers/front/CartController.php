@@ -13,14 +13,20 @@ class CartController extends Controller
       public function index()
     {
         if (Auth::check()) {
-            return view('front-end.cart.cart_list');
+            $cartItems  = Cart::getContent();
+
+            return view('front-end.cart.cart_list', [
+                'cartItems' => $cartItems,
+            ]);
         }
         return redirect()->route('customer.login');
     }
 
     public function add($id)
     {
-        $product = Products::where('id', $id)->first();
+        $product = Products::where('id', $id)->with('Image')->limit(1)->first();
+
+        // $image = $product->image;
 
         if(!Auth::check()){
             return redirect()->route('customer.login');
@@ -32,13 +38,19 @@ class CartController extends Controller
             ]);
         }
 
+   
+
         Cart::add([
             'id' => $product->id,
             'name' => $product->name,
             'price' => $product->price,
-            'quantity'=> $product->qty,
-            'image' => $product->image,
+            'quantity'=> 1 ,
+            'attributes' => [
+               'image' => count($product->image) > 0 ? $product->image[0]->image : null, 
+            ],
+
         ]);
+        
 
 
         return redirect()->route('cart.view')->with('success', 'Product added to cart');
@@ -47,6 +59,6 @@ class CartController extends Controller
     public function remove($id)
     {
         Cart::remove($id);
-        return redirect()->with('success', 'Product removed from cart');
+        return redirect()->route('cart.view')->with('success', 'Product removed from cart');
     }
 }

@@ -73,7 +73,6 @@
         success: function (response) {
           if (response.status == 200) {
 
-
             $('.show-image-category').html(`
                    <input type="hidden" name="category_image" value="${response.image}">
                      <img width="100" src="uploads/temp/${response.image}" alt="">
