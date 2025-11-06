@@ -7,17 +7,21 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Products;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public  function HomePage(){
     $categories = Category::limit(3)->get();
     $products = Products::orderBy('id', 'desc')->with('Image')->limit(9)->get();
-     
+     $admin = \App\Models\User::where('role', 1)->first();
+
 
     $data = [
         'categories'=>$categories,
-        'products'=>$products
+        'products'=>$products,
+        'admin'=> $admin
+
     ];
 
      return view('front-end.index', $data) ;
@@ -51,9 +55,7 @@ class HomeController extends Controller
         if(!$product){
              abort(404, 'Product not found');
         }
-        // return $product->image;
-        // $relatedProduct = Products::where('id', '!=' , $product->id)->with('Image')
-        //                             ->take(4)->get();
+
         $relatedProducts = Products::where('category_id', $product->category_id)
                            ->where('price', '>=', $product->price * 0.8)
                            ->where('price', '<=', $product->price * 1.2)
@@ -71,9 +73,7 @@ class HomeController extends Controller
             'relatedProducts'=> $relatedProducts
             
         ];
-        
-     
-        
+           
         return view('front-end.single-product'
         , $data,
     );

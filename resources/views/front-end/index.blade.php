@@ -78,15 +78,32 @@
 											<li>
 												<a href="#!" ><i onclick="ViewProduct({{ $product->id }})" class="tf-ion-ios-heart"></i></a>
 											</li>
+
+											{{-- add to cart --}}
 											<li>
-												<a href="#!"><i class="tf-ion-android-cart"></i></a>
+												@if (Auth::check())
+													<a href="{{ route('cart.add.to.cart', $product->id) }}" class="btn }}"><i class="tf-ion-android-cart"></i></a>
+													@else
+													<a href="{{ route('customer.login') }}"><i class="tf-ion-android-cart"></i></a>
+												@endif
 											</li>
 										</ul>
 									</div>
 								</div>
 								<div class="product-content">
 									<h4><a href="product-single.html">{{ $product->name }}</a></h4>
-									<p class="price">${{ $product->price }}</p>
+									<p class="price">
+											@php
+												if($product->price >= 1000000){
+
+													$priceM = $product->price / 1000000;
+													echo '$' . (intval($priceM) == $priceM ? $priceM : number_format($priceM, 1)) . 'M';
+												} else {
+													echo '$' . number_format($product->price, 2);
+												}
+											@endphp
+											</p>
+
 								</div>
 							</div>
 						</div>
@@ -111,9 +128,10 @@
 			@section('scripts')
 			<script> 
 				const ViewProduct = (id) => {
-				$.ajax({
+				
+					$.ajax({
 					type: "get",
-					url: `viewProduct/${id}`,
+					url: `/viewProduct/${id}`,
 					dataType: "json",
 					success: function (response) {
 						if(response.status == 200){
@@ -145,7 +163,7 @@
 															${product.desc}
 														</p>
 														<a href="cart.html" class="btn btn-main">Add To Cart</a>
-														<a href="/prduct/detail/${product.id}" class="btn btn-transparent">View Product Details</a>
+														<a href="/product/detail/${product.id}" class="btn btn-transparent">View Product Details</a>
 														
 
 													</div>

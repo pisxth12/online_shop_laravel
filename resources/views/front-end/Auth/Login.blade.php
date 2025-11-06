@@ -11,7 +11,6 @@
                     <a class="logo" href="index.html">
                         <img src="{{ asset('front-end/asset/images/logo.png') }}" alt="">
                     </a>
-
                     <h2 class="text-center">Welcome Back</h2>
 
 
@@ -29,6 +28,17 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
+                         <div class="form-group forgot_password" >
+                                    <div>
+                                        <input type="checkbox" name="remember_me" checked>
+                                        <span>REMEBER ME</span>
+                                    </div>
+
+                                    <div>
+                                        <p><a href="{{ route('customer.view.forgot.password') }}">forget password ? </a></p>
+                                    </div>
+            
+                        </div>
                         <div class="text-center">
                             <button type="submit" id="loginBtn" class="btn btn-main text-center">Login</button>
                         </div>
@@ -36,6 +46,7 @@
                     <p class="mt-20">New in this site ?<a href="{{ route('customer.register') }}"> Create New
                             Account</a></p>
                 </div>
+                
             </div>
         </div>
     </div>

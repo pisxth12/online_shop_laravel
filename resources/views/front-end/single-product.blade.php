@@ -2,6 +2,7 @@
 
 @section('contents')
 
+
 <section class="single-product">
 	<div class="container">
 		<div class="row">
@@ -57,12 +58,14 @@
 			</div>
 			<div class="col-md-7">
 				<div class="single-product-details">
-					<h2>Eclipse Crossbody</h2>
+
+					<h2> {{ $product->brand->name }} {{ $product->name }}</h2>
 					<p class="product-price">$300</p>
 					
 					<p class="product-description mt-20">
 								{{ Str::substr($product->desc, 0, 200) }}
-							</p>
+							</p>l
+							
 
 							<p>
 								{{ Str::length($product->desc) > 200 
@@ -231,7 +234,8 @@
 						<img class="img-responsive" src="{{ asset('uploads/product/'.$relatedProduct->image[0]->image) }}" alt="product-img" />
 						<div class="preview-meta">
 							<ul>
-								<li>
+								<li onclick="viewRelateProduct({{ $relatedProduct->id }})" >
+									{{-- view product details --}}
 									<span  data-toggle="modal" data-target="#product-modal">
 										<i class="tf-ion-ios-search"></i>
 									</span>
@@ -248,7 +252,7 @@
 					</div>
 					<div class="product-content">
 						<h4><a href="product-single.html">{{ $relatedProduct->name  }}</a></h4>
-						<p class="price">${{ $relatedProduct->price }}</p>
+						<p class="price">${{ number_format($relatedProduct->price ,2) }}</p>
 					</div>
 				</div>
 			</div>
@@ -262,34 +266,66 @@
 
 <!-- Modal -->
 <div class="modal product-modal fade" id="product-modal">
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		<i class="tf-ion-close"></i>
-	</button>
-  	<div class="modal-dialog " role="document">
-    	<div class="modal-content">
-	      	<div class="modal-body">
-	        	<div class="row">
-	        		<div class="col-md-8">
-	        			<div class="modal-image">
-		        			<img class="img-responsive" src="images/shop/products/modal-product.jpg" />
-	        			</div>
-	        		</div>
-	        		<div class="col-md-3">
-	        			<div class="product-short-details">
-	        				<h2 class="product-title">GM Pendant, Basalt Grey</h2>
-	        				<p class="product-price">$200</p>
-	        				<p class="product-short-description">
-	        					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem iusto nihil cum. Illo laborum numquam rem aut officia dicta cumque.
-	        				</p>
-	        				<a href="#!" class="btn btn-main">Add To Cart</a>
-	        				<a href="#!" class="btn btn-transparent">View Product Details</a>
-	        			</div>
-	        		</div>
-	        	</div>
-	        </div>
-    	</div>
-  	</div>
+	{{-- model here --}}
 </div>
+
+@section('scripts')
+	
+	
+
+	<script>
+	const viewRelateProduct = (id) => {
+    $.ajax({
+        type: "GET",
+        url: `/viewProduct/${id}`,
+        dataType: "json",
+        success: function (response) {
+            if (response.status === 200) {
+                let product = response.product;
+
+                let imageURL = (product.image && product.image.length > 0)
+                    ? `/uploads/product/${product.image[0].image}`
+                    : `/front-end/asset/images/no-image.png`;
+
+                let modalHTML = `
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="tf-ion-close"></i>
+                            </button>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <img class="img-responsive" src="${imageURL}" alt="${product.name}" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h2 class="product-title">${product.name}</h2>
+                                        <p class="product-price">$${product.price}</p>
+                                        <p class="product-short-description">${product.desc ?? ''}</p>
+                                        <a href="cart.html" class="btn btn-main">Add To Cart</a>
+                                        <a href="/product/detail/${product.id}" class="btn btn-transparent">View Product Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                $('#product-modal').html(modalHTML);
+                $('#product-modal').modal('show');
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            alert('Something went wrong while loading product.');
+        }
+    });
+}
+
+	</script>
+
+@endsection
 
 
 @endsection

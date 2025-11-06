@@ -5,13 +5,14 @@
 			<div class="col-md-4 col-xs-12 col-sm-4">
 				<div class="contact-number">
 					<i class="tf-ion-ios-telephone"></i>
-					<span>0129- 12323-123123</span>
+					{{-- <span>{{ preg_replace('/(\d{3})(?=\d{4})|(\d{3})(?=\d)/', '$1$2 ', $admin->phone) }}</span> --}}
+					<span>096 985 1100</span>
 				</div>
 			</div>
 			<div class="col-md-4 col-xs-12 col-sm-4">
 				<!-- Site Logo -->
 				<div class="logo text-center">
-					<a href="index.html">
+					<a href="{{ route('home.page') }}">
 						<!-- replace logo here -->
 						<svg width="135px" height="29px" viewBox="0 0 155 29" version="1.1" xmlns="http://www.w3.org/2000/svg"
 							xmlns:xlink="http://www.w3.org/1999/xlink">

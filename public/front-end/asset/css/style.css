@@ -2372,3 +2372,15 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
   color: #555;
 }
 /*# sourceMappingURL=style.css.map */
+.forgot_password{
+  
+  display: flex;
+  justify-content: space-between;
+  
+}
+.forgot_password > div:nth-child(2) > p a {
+  color: #4463ff;
+}
+.forgot_password > div:nth-child(2) > p a:hover{
+  font-weight: bold;
+}

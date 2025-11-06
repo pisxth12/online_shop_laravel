@@ -54,6 +54,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -65,7 +66,7 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => env('APP_TIMEZONE', 'Asia/Phnom_Penh'),
 
     /*
     |--------------------------------------------------------------------------
