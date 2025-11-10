@@ -31,7 +31,7 @@
                               <img width="80" src="{{ asset('uploads/product/default.png') }}" alt="{{ $cartItem->name }}">
                           @endif
                         </td>
-                    =
+                    
                         <td>{{ $cartItem->quantity }}</td>
 
                       
@@ -45,7 +45,7 @@
           
                   </tbody>
                 </table>
-                <a href="checkout.html" class="btn btn-main pull-right">Checkout</a>
+                <a href="{{ route('checkout.index') }}" class="btn btn-main pull-right">Checkout</a>
               </form>
             </div>
           </div>

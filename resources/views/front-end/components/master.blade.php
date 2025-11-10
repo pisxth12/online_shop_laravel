@@ -9,9 +9,14 @@
 @include('front-end.components.navBar')
 
 
+
+
+
+
 @yield('category')
 @yield('product')
 @yield('contents')
+@yield('checkout')
 
 
 @include('front-end.components.subscribe')

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Products;
@@ -16,15 +18,38 @@ class HomeController extends Controller
     $products = Products::orderBy('id', 'desc')->with('Image')->limit(9)->get();
      $admin = \App\Models\User::where('role', 1)->first();
 
-
+    $banners = Banner::orderBy('id', 'desc')->get(); 
     $data = [
         'categories'=>$categories,
         'products'=>$products,
-        'admin'=> $admin
+        'admin'=> $admin,
+        'banners'=> $banners
 
     ];
 
      return view('front-end.index', $data) ;
+    }
+    public function shop(){
+        $products = Products::orderBy('id', 'desc')->with('Image')->get();
+        $categories = Category::get();
+        $brands = Brand::get();
+        $colors = Color::get();
+        
+        if($products->isEmpty()){
+            abort(404, 'Product not found');
+        }
+
+        $allProduct = [
+           
+                'products'=> $products,
+                'categories'=> $categories,
+                'brands'=> $brands,
+                'colors'=> $colors
+            
+            ];
+            // return $allProduct;
+        
+        return view('front-end.shop', compact('allProduct'));
     }
 
     public function view($id){

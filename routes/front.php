@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Front\CartController;
+use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CustomerController;
 use App\Http\Controllers\front\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'HomePage'])->name('home.page');
 Route::get('/viewProduct/{id}', [HomeController::class, 'view'])->name('product.view');
 Route::get('/product/detail/{id}', [HomeController::class, 'detail'])->name('product.detail');
+Route::get('/shop',[HomeController::class,'shop'])->name('shop.page');
 
 Route::middleware('guest.customer')->group(function () {
     Route::get('/register', [CustomerController::class, 'showRegister'])->name('customer.register');
@@ -38,6 +40,12 @@ Route::middleware('guest.customer')->group(function () {
         Route::get('/cart/add/{id}',[CartController::class,'add'])->name('add.to.cart');
         Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('remove.from.cart');
     });
-   
 
+    Route::name('checkout.')->group(function (){
+        Route::get('/checkout',[CheckoutController::class,'index'])->name('index');
+    });
+
+});
+Route::fallback(function(){
+    return response()->view('errors.404',[],404);
 });

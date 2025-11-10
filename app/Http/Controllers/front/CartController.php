@@ -24,10 +24,11 @@ class CartController extends Controller
 
     public function add($id)
     {
-        $product = Products::where('id', $id)->with('Image')->limit(1)->first();
+        $product = Products::where('id', $id)->with('Image','Brand')->limit(1)->first();
 
         // $image = $product->image;
 
+ 
         if(!Auth::check()){
             return redirect()->route('customer.login');
         }
@@ -37,19 +38,29 @@ class CartController extends Controller
                 'message' => 'Product not found',
             ]);
         }
+      
+        $item = Cart::get($product->id);
 
-   
+        if($item){
+           Cart::update($product->id,[
+            'quantity' => 1,
+           ]);
+        }else{
+            Cart::add([
+                'id' => $product->id,
+                'name'=> $product->name,
+                'price'=> $product->price,
+                'quantity'=> 1,
+                'attributes' => [
+                    'image'=> count($product->image) > 0 ? $product->image[0]->image : null,
+                    'color'=> $product->color,
+                    'brand_name'=> $product->brand->name,
+                   
+                ]
 
-        Cart::add([
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'quantity'=> 1 ,
-            'attributes' => [
-               'image' => count($product->image) > 0 ? $product->image[0]->image : null, 
-            ],
-
-        ]);
+            ]);
+        }
+  
         
 
 

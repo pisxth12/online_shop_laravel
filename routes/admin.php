@@ -47,10 +47,10 @@ Route::prefix('admin')->group(function(){
       Route::get('/banner/list',[BannerController::class, 'list'])->name('banner.list');
       Route::post('/banner/store',[BannerController::class,'store'])->name('banner.store');
       Route::post('/banner/edit',[BannerController::class,'edit'])->name('banner.edit');
-      Route::post('/banner/update',[BannerController::class,'update'])->name('banner.update');
-      Route::post('/banner/delete',[BannerController::class,'delete'])->name('banner.delete');
+      Route::post('/banner/update',[BannerController::class,'updateBanner'])->name('banner.update');
+      Route::post('/banner/delete',[BannerController::class,'deleteBanner'])->name('banner.delete');
       Route::post('/banner/upload',[BannerController::class,'upload'])->name('banner.upload'); /*for img*/
-      Route::post('/banner/cancel-image',[BannerController::class,'cancelImage'])->name('banner.cancel.image');
+      Route::post('/banner/cancel/image',[BannerController::class,'cancelImage'])->name('banner.cancel.image');
       
       
       //category router

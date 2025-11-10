@@ -15,8 +15,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
   <!-- Vendor CSS -->
+  {{-- vendors/iconfonts/ionicons/dist/css/ionicons.css --}}
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/mdi/css/materialdesignicons.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/ionicons/dist/css/ionicons.css') }}">
+  <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/iconfonts/flag-icon-css/css/flag-icon.min.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/css/vendor.bundle.base.css') }}">
   <link rel="stylesheet" href="{{ asset('back-end/assets/vendors/css/vendor.bundle.addons.css') }}">
@@ -135,7 +136,8 @@
   <!-- Custom js for this page-->
   <script src="{{ asset('back-end/assets/js/demo_1/dashboard.js') }}"></script>
   <!-- End custom js for this page-->
-  <script src="{{ asset('back-end/assets/js/shared/jquery.cookie.js') }}" type="text/javascript"></script>
+  {{-- js/shared/jquery.cookie.js --}}
+  <script src="{{ asset('back-end/assets/js/shared/off-canvas.js') }}" type="text/javascript"></script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
