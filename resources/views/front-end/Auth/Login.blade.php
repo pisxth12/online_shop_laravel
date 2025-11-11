@@ -1,6 +1,7 @@
+<html lang="en">
 @include('front-end.components.header')
-
-<section class="signin-page account">
+<body>
+    <section class="signin-page account">
     <div class="container">
         <div class="row">
 
@@ -61,4 +62,6 @@
 
     </script>
 
-</section>
+</section>    
+</body>
+</html>

@@ -1,6 +1,6 @@
-
-
-
+@extends('front-end.components.master')
+@section('slider')
+  
   <div class="hero-slider">
   @if (!empty($banners[0]->image))
     <div class="slider-item th-fullpage hero-area" style="background-image: url({{ asset('uploads/banner/'.$banners[0]->image) }});">
@@ -55,3 +55,5 @@
   </div>
 </div>
 
+
+@endsection

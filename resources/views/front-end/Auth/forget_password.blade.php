@@ -1,12 +1,14 @@
-@include('front-end.components.header')
 
-<section class="forget-password-page account">
+<html lang="en">
+@include('front-end.components.header')
+<body>
+  <section class="forget-password-page account">
   <div class="container">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <div class="block text-center">
           <a class="logo" href="index.html">
-            <img src="images/logo.png" alt="">
+            <img src="images/logo.pn" alt="">
           </a>
           <h2 class="text-center">Enter email to create new password</h2>
           <form  class="text-left clearfix" action="{{ route('customer.process.forgot.password') }}" method="POST" >
@@ -27,4 +29,6 @@
     </div>
   </div>
 </section>
+</body>
+</html>
 

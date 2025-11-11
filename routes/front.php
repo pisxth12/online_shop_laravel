@@ -5,6 +5,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CustomerController;
 use App\Http\Controllers\front\HomeController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -12,6 +13,8 @@ Route::get('/', [HomeController::class, 'HomePage'])->name('home.page');
 Route::get('/viewProduct/{id}', [HomeController::class, 'view'])->name('product.view');
 Route::get('/product/detail/{id}', [HomeController::class, 'detail'])->name('product.detail');
 Route::get('/shop',[HomeController::class,'shop'])->name('shop.page');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
 
 Route::middleware('guest.customer')->group(function () {
     Route::get('/register', [CustomerController::class, 'showRegister'])->name('customer.register');
@@ -39,11 +42,13 @@ Route::middleware('guest.customer')->group(function () {
         Route::get('/view/cart',[CartController::class,'index'])->name('view');
         Route::get('/cart/add/{id}',[CartController::class,'add'])->name('add.to.cart');
         Route::get('/cart/remove/{id}',[CartController::class,'remove'])->name('remove.from.cart');
+        Route::post('/cart/update',[CartController::class,'updateQuantity'])->name('update.quantity');
     });
 
     Route::name('checkout.')->group(function (){
         Route::get('/checkout',[CheckoutController::class,'index'])->name('index');
     });
+
 
 });
 Route::fallback(function(){

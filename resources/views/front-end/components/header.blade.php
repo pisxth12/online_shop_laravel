@@ -4,7 +4,6 @@
   ================================================== -->
   <meta charset="utf-8">
   <title>Aviato | E-commerce template</title>
-
   <!-- Mobile Specific Metas
   ================================================== -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,9 +14,12 @@
   
   <!-- theme meta -->
   <meta name="theme-name" content="aviato" />
+
+  {{-- meta csrf --}}
+   <meta name="csrf-token" content="{{ csrf_token() }}">
   
   <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png" />
+  <link rel="shortcut icon" type="image/x-icon" href="{{ asset('front-end/asset/images/favicon.png') }}" />
   
   <!-- Themefisher Icon font -->
   <link rel="stylesheet" href="{{asset('front-end/asset/plugins/themefisher-font/style.css')}}">
@@ -35,6 +37,12 @@
 
 
   {{-- bootstrap link --}}
+
+    <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <!-- Toastify JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  
   
 
 

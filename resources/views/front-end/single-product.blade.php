@@ -8,8 +8,8 @@
 		<div class="row">
 			<div class="col-md-6">
 				<ol class="breadcrumb">
-					<li><a href="index.html">Home</a></li>
-					<li><a href="shop.html">Shop</a></li>
+					<li><a href="{{ route('home.page') }}">Home</a></li>
+					<li><a href="{{ route('shop.page') }}">Shop</a></li>
 					<li class="active">Single Product</li>
 				</ol>
 			</div>
@@ -106,7 +106,13 @@
 							<li class=""><a href="product-single.html">{{ $product->brand->name }}</a></li>
 						</ul>
 					</div>
-					<a href="cart.html" class="btn btn-main mt-20">Add To Cart</a>
+					@if (Auth::check())
+						<a href="{{ route('cart.add.to.cart', $product->id) }}" class="btn btn-main mt-20" >Add To Cart</a>
+					@else
+						<a href="{{ route('customer.login') }}" class="btn btn-main mt-20">Add To Cart</a>
+						
+					@endif
+
 				</div>
 			</div>
 		</div>
@@ -137,7 +143,7 @@
 								    <li class="media">
 
 								        <a class="pull-left" href="#!">
-								            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg" alt="" width="50" height="50" />
+								            <img class="media-object comment-avatar" src="{{ asset('front-end/asset/images/blog/avater-1.jpg') }}" alt="" width="50" height="50" />
 								        </a>
 
 								        <div class="media-body">
@@ -162,7 +168,7 @@
 								    <li class="media">
 
 								        <a class="pull-left" href="#!">
-								            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg" alt="" width="50" height="50" />
+								            <img class="media-object comment-avatar" src="{{ asset('front-end/asset/images/blog/avater-2.jpg')}}" alt="" width="50" height="50" />
 								        </a>
 
 								        <div class="media-body">
@@ -188,7 +194,7 @@
 								    <li class="media">
 
 								        <a class="pull-left" href="#!">
-								            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg" alt="" width="50" height="50">
+								            <img class="media-object comment-avatar" src="{{ asset('front-end/asset/images/blog/avater-3.jpg') }}" alt="" width="50" height="50">
 								        </a>
 
 								        <div class="media-body">
@@ -245,7 +251,11 @@
 			                        <a href="#" ><i class="tf-ion-ios-heart"></i></a>
 								</li>
 								<li>
-									<a href="#!"><i class="tf-ion-android-cart"></i></a>
+									@if (Auth::check())
+									<a href="{{ route("cart.add.to.cart", $relatedProduct->id) }}"><i class="tf-ion-android-cart"></i></a>
+									@else
+									<a href="{{ route("customer.login") }}"><i class="tf-ion-android-cart"></i></a>
+									@endif
 								</li>
 							</ul>
                       	</div>
@@ -274,6 +284,10 @@
 	
 
 	<script>
+
+		const isLogin = {{ Auth::check() ? "true" : "false"}};
+
+
 	const viewRelateProduct = (id) => {
     $.ajax({
         type: "GET",
@@ -286,7 +300,8 @@
                 let imageURL = (product.image && product.image.length > 0)
                     ? `/uploads/product/${product.image[0].image}`
                     : `/front-end/asset/images/no-image.png`;
-
+				
+				let cartLink = isLogin ? `{{ route('cart.add.to.cart', $product->id) }}` : `{{ route('customer.login') }}`;
                 let modalHTML = `
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -302,7 +317,7 @@
                                         <h2 class="product-title">${product.name}</h2>
                                         <p class="product-price">$${product.price}</p>
                                         <p class="product-short-description">${product.desc ?? ''}</p>
-                                        <a href="cart.html" class="btn btn-main">Add To Cart</a>
+                                        <a href="${cartLink}" class="btn btn-main">Add To Cart</a>
                                         <a href="/product/detail/${product.id}" class="btn btn-transparent">View Product Details</a>
                                     </div>
                                 </div>

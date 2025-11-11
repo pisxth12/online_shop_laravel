@@ -10,17 +10,28 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class CartController extends Controller
 {
-      public function index()
-    {
-        if (Auth::check()) {
-            $cartItems  = Cart::getContent();
-
-            return view('front-end.cart.cart_list', [
-                'cartItems' => $cartItems,
-            ]);
-        }
+     public function index()
+{
+    if (!Auth::check()) {
         return redirect()->route('customer.login');
     }
+
+    $cartItems = Cart::getContent();
+
+    if ($cartItems->count() == 0) {
+        return redirect()->route('shop.page')->with('info','Your cart is empty');
+    }
+
+    return view('front-end.cart.cart_list', compact('cartItems'));
+}
+
+        // public function viewProduct(Request $request)
+        // {
+        //     $id = $request->id;
+        //     Cart::where('id', $r)
+
+        //     return v
+        // }
 
     public function add($id)
     {
@@ -61,8 +72,6 @@ class CartController extends Controller
             ]);
         }
   
-        
-
 
         return redirect()->route('cart.view')->with('success', 'Product added to cart');
     }
@@ -70,6 +79,39 @@ class CartController extends Controller
     public function remove($id)
     {
         Cart::remove($id);
-        return redirect()->route('cart.view')->with('success', 'Product removed from cart');
+        return redirect()->back()->with('success', 'Product removed from cart');
     }
+    
+public function updateQuantity(Request $request){
+    $id = $request->id;
+    $quantity = (int) $request->quantity;
+
+    $cartItem = Cart::get($id);
+    if(!$cartItem){
+        return response()->json([
+            'status' => 404,
+            'message' => 'Product not found'
+        ]);
+    }
+
+    $newQty = max(1, $quantity);
+
+    // Correct structure for Darryldecode\Cart
+    Cart::update($id, [
+        'quantity' => [
+            'relative' => false,
+            'value' => $newQty
+        ]
+    ]);
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Success',
+        'quantity' => $newQty,
+        'item_total' => $newQty * $cartItem->price,  // optional: send subtotal
+        'cart_total' => Cart::getTotal()             // optional: send total
+    ]);
+}
+
+
 }

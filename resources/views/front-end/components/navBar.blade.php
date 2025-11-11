@@ -28,55 +28,54 @@
 					</a>
 				</div>
 			</div>
+
+			{{-- cart on navbar --}}
 			<div class="col-md-4 col-xs-12 col-sm-4">
 				<!-- Cart -->
 				<ul class="top-menu text-right list-inline">
 					<li class="dropdown cart-nav dropdown-slide">
-						<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><i
-								class="tf-ion-android-cart"></i>Cart</a>
+						<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+							<i class="tf-ion-android-cart"></i>Cart
+							<span class="badge">{{ $cartItems->count() }}</span>
+						</a>
+
 						<div class="dropdown-menu cart-dropdown">
-							<!-- Cart Item -->
-							<div class="media">
-								<a class="pull-left" href="#!">
-									<img class="media-object" src="{{asset('front-end/asset/images/shop/cart/cart-1.jpg')}}" alt="image" />
-								</a>
-								<div class="media-body">
-									<h4 class="media-heading"><a href="#!">Ladies Bag</a></h4>
-									<div class="cart-price">
-										<span>1 x</span>
-										<span>1250.00</span>
+							@if($cartItems->count() > 0)
+								@foreach($cartItems as $item)
+									<div class="media">
+										<a class="pull-left" href="#!">
+											<img class="media-object" src="{{ asset('uploads/product/' . $item->attributes->image) }}" alt="image" />
+										</a>
+										<div class="media-body">
+											<h4 class="media-heading"><a href="#!">{{ $item->name }}</a></h4>
+											<div class="cart-price">
+												<span>{{ $item->quantity }} x</span>
+												<span>${{ $item->price }}</span>
+											</div>
+											<h5><strong>${{ $item->quantity * $item->price }}</strong></h5>
+										</div>
+										<a href="{{ route('cart.remove.from.cart', $item->id) }}" class="remove"><i class="tf-ion-close"></i></a>
 									</div>
-									<h5><strong>$1200</strong></h5>
-								</div>
-								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
-							<!-- Cart Item -->
-							<div class="media">
-								<a class="pull-left" href="#!">
-									<img class="media-object" src="{{asset('front-end/asset/images/shop/cart/cart-2.jpg')}}" alt="image" />
-								</a>
-								<div class="media-body">
-									<h4 class="media-heading"><a href="#!">Ladies Bag</a></h4>
-									<div class="cart-price">
-										<span>1 x</span>
-										<span>1250.00</span>
-									</div>
-									<h5><strong>$1200</strong></h5>
-								</div>
-								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
+								@endforeach
 
-							<div class="cart-summary">
-								<span>Total</span>
-								<span class="total-price">$1799.00</span>
-							</div>
-							<ul class="text-center cart-buttons">
-								<li><a href="cart.html" class="btn btn-small">View Cart</a></li>
-								<li><a href="checkout.html" class="btn btn-small btn-solid-border">Checkout</a></li>
-							</ul>
+								<div class="cart-summary">
+									<span>Total</span>
+									<span class="total-price">${{ Cart::getTotal() }}</span>
+								</div>
+
+								<ul class="text-center cart-buttons">
+									<li><a href="{{ route('cart.view') }}" class="btn btn-small">View Cart</a></li>
+									<li><a href="{{ route('checkout.index') }}" class="btn btn-small btn-solid-border">Checkout</a></li>
+								</ul>
+
+							@else
+								<p class="text-center">Your cart is empty</p>
+							@endif
 						</div>
+					</li>
+					<!-- / Cart -->
 
-					</li><!-- / Cart -->
+					
 
 					<!-- Search -->
 					<li class="dropdown search dropdown-slide">
@@ -84,23 +83,49 @@
 								class="tf-ion-ios-search-strong"></i> Search</a>
 						<ul class="dropdown-menu search-dropdown">
 							<li>
-								<form action="post"><input type="search" class="form-control" placeholder="Search..."></form>
+								<form action="{{ route('search') }}" method="GET"><input type="search" name="query" class="form-control" placeholder="Search..."></form>
 							</li>
 						</ul>
 					</li><!-- / Search -->
 
 					<!-- Languages -->
-					<li class="commonSelect">
-						<select class="form-control">
-							<option>EN</option>
-							<option>DE</option>
-							<option>FR</option>
-							<option>ES</option>
-						</select>
-					</li><!-- / Languages -->
+					
+						<li class="commonSelect dropdown profile-nav dropdown-slide">
+							<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+								<i class="tf-ion-person"></i>
+								@if(Auth::check())
+									{{ Auth::user()->name }}
+								@else
+									Account
+								@endif
+							</a>
+
+							<ul class="dropdown-menu profile-dropdown">
+								@if(Auth::check())
+									<li><a href="{{ route('customer.login') }}"><i class="tf-ion-android-person"></i> Profile</a></li>
+									<li><a href="#logout"
+										onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+										<i class="tf-ion-log-out"></i> Logout
+										</a>
+										<form id="logout-form" action="" method="POST" style="display: none;">
+											@csrf
+										</form>
+									</li>
+								@else
+									<li><a href="{{ route('customer.login') }}"><i class="tf-ion-android-person"></i> Login</a></li>
+									<li><a href="{{ route('customer.register') }}"><i class="tf-ion-person-add"></i> Register</a></li>
+								@endif
+							</ul>
+						</li>
+						<!-- /Profile -->
+								
+
+					
 
 				</ul><!-- / .nav .navbar-nav .navbar-right -->
 			</div>
+			{{-- end cart on navbar --}}
+			
 		</div>
 	</div>
 </section><!-- End Top Header Bar -->
@@ -146,7 +171,7 @@
 										<li class="dropdown-header">Pages</li>
 										<li role="separator" class="divider"></li>
 										<li><a href="{{ route('shop.page') }}">Shop</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
+										<li><a href="{{ route('checkout.index') }}">Checkout</a></li>
 										<li><a href="{{ route('cart.view') }}">Cart</a></li>
 										<li><a href="pricing.html">Pricing</a></li>
 										<li><a href="confirmation.html">Confirmation</a></li>

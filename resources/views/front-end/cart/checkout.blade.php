@@ -1,5 +1,5 @@
 @extends('front-end.components.master')
-@section('checkout')
+@section('contents')
     <section class="page-header">
 	<div class="container">
 		<div class="row">
@@ -154,3 +154,4 @@
    </div>
    
 @endsection
+

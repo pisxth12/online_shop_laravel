@@ -13,7 +13,7 @@
 						<div class="preview-meta">
 							<ul>
 								<li>
-									<span  data-toggle="modal" data-target="#product-modal">
+									<span  data-toggle="modal" data-target="#product-modal-{{ $product->id }}">
 										<i class="tf-ion-ios-search-strong"></i>
 									</span>
 								</li>
@@ -22,7 +22,7 @@
 								</li>
 								<li>
                                      @if (Auth::check())
-                                            <a href="{{ route('cart.add.to.cart', $product->id) }}" class="btn }}"><i class="tf-ion-android-cart"></i></a>
+                                            <a href="{{ route('cart.add.to.cart', $product->id) }}"><i class="tf-ion-android-cart"></i></a>
                                             @else
                                             <a href="{{ route('customer.login') }}"><i class="tf-ion-android-cart"></i></a>
                                         @endif
@@ -37,12 +37,12 @@
 				</div>
 			</div>
 			
-            @endforeach
+        
 			
 		
 		
 		<!-- Modal -->
-		<div class="modal product-modal fade" id="product-modal">
+		<div class="modal product-modal fade" id="product-modal-{{ $product->id }}">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<i class="tf-ion-close"></i>
 			</button>
@@ -52,18 +52,25 @@
 			        	<div class="row">
 			        		<div class="col-md-8 col-sm-6 col-xs-12">
 			        			<div class="modal-image">
-				        			<img class="img-responsive" src="images/shop/products/modal-product.jpg" alt="product-img" />
+				        			<img class="img-responsive" src="{{ asset('uploads/product/'. $product->image[0]->image) }}" alt="product-img" />
 			        			</div>
 			        		</div>
 			        		<div class="col-md-4 col-sm-6 col-xs-12">
 			        			<div class="product-short-details">
-			        				<h2 class="product-title">GM Pendant, Basalt Grey</h2>
-			        				<p class="product-price">$200</p>
+			        				<h2 class="product-title">{{ $product->name }}</h2>
+			        				<p class="product-price">{{ $product->price }}</p>
 			        				<p class="product-short-description">
-			        					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem iusto nihil cum. Illo laborum numquam rem aut officia dicta cumque.
+										{{ $product->desc }}
 			        				</p>
-			        				<a href="cart.html" class="btn btn-main">Add To Cart</a>
-			        				<a href="product-single.html" class="btn btn-transparent">View Product Details</a>
+			        				
+									 @if (Auth::check())
+								   	    <a href="{{ route('cart.add.to.cart', $product->id) }}"class="btn btn-main">Add To Cart</a>
+                                  
+                                            @else
+								   	    <a href="{{ route('customer.login', $product->id) }}"class="btn btn-main">Add To Cart</a>
+                                            
+                                        @endif
+			        				<a href="{{ route('product.detail', $product->id)}}" class="btn btn-transparent">View Product Details</a>
 			        			</div>
 			        		</div>
 			        	</div>
@@ -72,6 +79,7 @@
 		  	</div>
 		</div><!-- /.modal -->
 
+		    @endforeach
 		</div>
 	</div>
 </section>

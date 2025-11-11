@@ -1,14 +1,6 @@
 @extends('front-end.components.master')
-
+		
 		@section('contents')
-
-		@endsection
-
-		@section('slider')
-			@include('front-end.components.slider')
-		@endsection
-
-		@section('category')
 			<section class="product-category section">
 			<div class="container">
 				<div class="row">
@@ -22,7 +14,7 @@
 							<a href="#!">
 								{{-- <img src="{{asset('front-end/asset/images/shop/category/category-1.jpg')}}" alt="" /> --}}
 								<img src="{{asset('uploads/category/'. $categories[0]->image)}}" alt="" />
-
+								
 								<div class="content ">
 									<h3>{{$categories[0]->name}}</h3>
 									<p>{{ $categories[0]->title}}Shop New Season Clothing</p>
@@ -53,9 +45,7 @@
 				</div>
 			</div>
 		</section>
-		@endsection
-
-		@section('product')
+		
 		<section class="products section bg-gray">
 			<div class="container">
 				<div class="row">
@@ -66,8 +56,8 @@
 				<div class="row">
 					
 					@if ($products->count() > 0)
-						@foreach ($products as $product )
-							<div class="col-md-4">
+					@foreach ($products as $product )
+					<div class="col-md-4">
 						<div class="product-item">
 							<div class="product-thumb">
 								<span class="bage">Sale</span>
@@ -80,17 +70,18 @@
 											<span  data-toggle="modal" data-target="#product-modal">
 												<i class="tf-ion-ios-search-strong"></i>
 											</span>
+											
 										</li>
 										<li>
 											<a href="#!" ><i onclick="ViewProduct({{ $product->id }})" class="tf-ion-ios-heart"></i></a>
 										</li>
-
+										
 										{{-- add to cart --}}
 										<li>
 											@if (Auth::check())
-												<a href="{{ route('cart.add.to.cart', $product->id) }}" class="btn }}"><i class="tf-ion-android-cart"></i></a>
-												@else
-												<a href="{{ route('customer.login') }}"><i class="tf-ion-android-cart"></i></a>
+											<a href="{{ route('cart.add.to.cart', $product->id) }}"><i class="tf-ion-android-cart"></i></a>
+											@else
+											<a href="{{ route('customer.login') }}"><i class="tf-ion-android-cart"></i></a>
 											@endif
 										</li>
 									</ul>
@@ -99,27 +90,26 @@
 							<div class="product-content">
 								<h4><a href="product-single.html">{{ $product->name }}</a></h4>
 								<p class="price">
-										@php
+									@php
 											if($product->price >= 1000000){
-
+												
 												$priceM = $product->price / 1000000;
 												echo '$' . (intval($priceM) == $priceM ? $priceM : number_format($priceM, 1)) . 'M';
 											} else {
 												echo '$' . number_format($product->price, 2);
 											}
-										@endphp
+											@endphp
 										</p>
-
+										
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-						@endforeach
-					
-				
-					@endif
-					
-				
-
+							@endforeach
+							
+							
+							@endif
+							
+	
 				
 				<!-- Modal -->
 				<div class="modal product-modal fade" id="product-modal">
@@ -129,11 +119,13 @@
 				</div>
 			</div>
 		</section>
-		@endsection
 
+		@endsection
 
 		@section('scripts')
 		<script> 
+			const isLoggedIn = {{ Auth::check() ? "true" : "false"}};
+
 			const ViewProduct = (id) => {
 			
 				$.ajax({
@@ -144,10 +136,13 @@
 					if(response.status == 200){
 						let product = response.product;
 
-						// Construct image URL
 						let imageURL = (product.image && product.image.length > 0) 
 							? `/uploads/product/${product.image[0].image}` 
 							: `/back-end/assets/css/demo_1/style.css`; // fallback image
+
+							let cartLink = isLoggedIn ? `{{ route('cart.add.to.cart',$product->id) }}` : `{{ route('customer.login') }}`;
+
+						
 
 						let modalHTML = `
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -169,7 +164,7 @@
 													<p class="product-short-description">
 														${product.desc}
 													</p>
-													<a href="cart.html" class="btn btn-main">Add To Cart</a>
+													<a href="${cartLink}" class="btn btn-main">Add To Cart</a>
 													<a href="/product/detail/${product.id}" class="btn btn-transparent">View Product Details</a>
 													
 
@@ -193,5 +188,10 @@
 		</script>
 			
 		@endsection
+
+
+		
+
+	
 
 
