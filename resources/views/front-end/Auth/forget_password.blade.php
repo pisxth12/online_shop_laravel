@@ -8,7 +8,7 @@
       <div class="col-md-6 col-md-offset-3">
         <div class="block text-center">
           <a class="logo" href="index.html">
-            <img src="images/logo.pn" alt="">
+            <img src="images/logo.png" alt="">
           </a>
           <h2 class="text-center">Enter email to create new password</h2>
           <form  class="text-left clearfix" action="{{ route('customer.process.forgot.password') }}" method="POST" >

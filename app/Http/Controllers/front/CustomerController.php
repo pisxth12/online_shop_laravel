@@ -79,12 +79,15 @@ class CustomerController extends Controller
         return view('front-end.Auth.forget_password');
     }
     public function processForgotPassword(Request $request)
+
     {
+
+      
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
         ]);
         if ($validator->fails()) {
-            return redirect()->route('customer.forgot_password')->withErrors($validator);
+            return redirect()->route('customer.view.forgot.password')->withErrors($validator);
         }
         $code = mt_rand(100000, 999999);
         $token = hash('sha256', random_bytes(128));
